@@ -19,6 +19,6 @@
   "devDependencies": {
     "@biomejs/biome": "^2.0.6",
     "ciorent": "^0.8.0",
-    "udic": "^0.1.5"
+    "udic": "^0.2.0"
   }
 }

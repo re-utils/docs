@@ -56,6 +56,8 @@ const createUUID = di.service('createUUID')<
 ## Using a service
 To access the service, use `di.derive` to create a `Compute` based on the service value:
 ```ts
+import * as di from 'udic';
+
 const createUUID = di.service('createUUID')<
   // Type of the UUID generator
   () => string
@@ -85,6 +87,8 @@ Generated UUID: abcd
 ## Nesting computes
 A `Compute` can be used within another `Compute`.
 ```ts
+import * as di from 'udic';
+
 const number = di.service('number')<number>();
 
 // Calculate a number based on randNumber
@@ -113,4 +117,58 @@ console.log(
 Example output:
 ```
 Result: 2
+```
+
+## Provide different implementations
+In this example, we can choose to log the number to the console or file.
+```ts
+import { appendFileSync } from 'node:fs';
+import * as di from 'udic';
+
+const randNumber = di.service('randNumber')<() => number>();
+const logNumber = di.service('logNumber')<(n: number) => void>();
+
+// Run the compute by providing a
+// random number generator implementation
+const run = (
+  // A compute with dependency 'randNumber' that returns a number
+  compute: di.Compute<
+    di.InferDependency<typeof randNumber>,
+    number
+  >
+) => compute({
+  randNumber: () => 0
+});
+
+const computeNumber = di.derive(
+  [randNumber, logNumber],
+  (randNumber, logNumber) => {
+    const result = randNumber();
+    logNumber(result);
+    return result;
+  }
+);
+
+// Log generated number to console
+run(
+  di.inject(computeNumber, {
+    logNumber: (n) => {
+      console.log('Result:', n);
+    }
+  })
+);
+
+// Log generated number to a file
+run(
+  di.inject(computeNumber, {
+    logNumber: (n) => {
+      appendFileSync('./debug.log', `Result: ${n}`);
+    }
+  })
+);
+```
+
+Example output (both `debug.log` & console):
+```
+Result: 0
 ```
