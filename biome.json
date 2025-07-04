@@ -1,0 +1,60 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
+  "vcs": {
+    "enabled": false,
+    "clientKind": "git",
+    "useIgnoreFile": false
+  },
+  "files": {
+    "includes": ["**/*.{mjs,css,mdx,md,ts}"]
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "bracketSpacing": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "style": {
+        "noNamespace": "error",
+        "noImplicitBoolean": "warn",
+        "noUselessElse": "error",
+        "useCollapsedElseIf": "error",
+        "useConst": "error",
+        "useNodejsImportProtocol": "error",
+        "useImportType": "error",
+        "useExponentiationOperator": "info",
+        "useTemplate": "off",
+        "noNonNullAssertion": "off",
+        "noParameterAssign": "off"
+      },
+      "complexity": {
+        "noForEach": "info",
+        "noBannedTypes": "off",
+        "noVoid": "off",
+        "noUselessCatch": "info",
+        "useArrowFunction": "warn"
+      },
+      "performance": {
+        "noDelete": "off"
+      },
+      "correctness": {
+        "useYield": "warn",
+        "noUnusedImports": "warn",
+        "useImportExtensions": "error"
+      },
+      "suspicious": {
+        "noAssignInExpressions": "off",
+        "noExplicitAny": "off",
+        "noImplicitAnyLet": "off"
+      }
+    }
+  }
+}

@@ -1,26 +1,52 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
-import starlight from '@astrojs/starlight';
+import { defineConfig } from "astro/config";
+import starlight from "@astrojs/starlight";
+
+/**
+ * @param {string} prefix
+ * @param {string[]} items
+ */
+const createItem = (prefix, items) => ({
+  label: prefix,
+  items: items.map((item) => ({
+    label: item,
+    slug: prefix.toLowerCase() + "/" + item.toLowerCase(),
+  })),
+});
 
 // https://astro.build/config
 export default defineConfig({
-	integrations: [
-		starlight({
-			title: 'My Docs',
-			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
-			sidebar: [
-				{
-					label: 'Guides',
-					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', slug: 'guides/example' },
-					],
-				},
-				{
-					label: 'Reference',
-					autogenerate: { directory: 'reference' },
-				},
-			],
-		}),
-	],
+  integrations: [
+    starlight({
+      title: "r-u",
+      social: [
+        {
+          icon: "github",
+          label: "GitHub",
+          href: "//github.com/re-utils",
+        },
+        {
+          icon: "discord",
+          label: "Discord",
+          href: "//discord.gg/za6S2GbK24",
+        },
+      ],
+      sidebar: [
+        createItem("Guides", ["Intro", "Libraries"]),
+        createItem("Concurrency", [
+          "References",
+          "Sleep",
+          "Semaphore",
+          "Latch",
+        ]),
+      ],
+      expressiveCode: {
+        themes: ["catppuccin-mocha"],
+      },
+      customCss: [
+        "@fontsource/fira-mono/index.css",
+        "./src/styles/globals.css",
+      ],
+    }),
+  ],
 });
