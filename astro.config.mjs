@@ -17,7 +17,7 @@ const createItem = (prefix, items, label = prefix) => ({
 // https://astro.build/config
 export default defineConfig({
   redirects: Object.fromEntries(
-    ["/concurrency", "/di"].map((link) => [link, link + "/redirects"]),
+    ["/concurrency", "/di"].map((link) => [link, link + "/references"]),
   ),
   integrations: [
     starlight({
