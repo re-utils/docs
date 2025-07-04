@@ -85,23 +85,32 @@ Generated UUID: abcd
 ## Nesting computes
 A `Compute` can be used within another `Compute`.
 ```ts
-const randNumber = di.service('randNumber')<number>();
+const number = di.service('number')<number>();
 
-const computeNumber = di.derive(
-  [randNumber],
-  (randNumber) => randNumber + 1
+// Calculate a number based on randNumber
+const computedNumber = di.derive(
+  [number],
+  (number) => number + 1
 );
 
-// Using another compute
-const anotherCompute = di.derive(
-  [computeNumber],
-  (computedValue) => computedValue * 2
+const string = di.service('string')<number>();
+
+const computedValue = di.derive(
+  // Capture the compute value
+  [computedNumber, string],
+  (computedNumber, string) => string + (computedNumber * 2)
 );
 
-console.log('Computed value:', anotherCompute({ randNumber: 0 }));
+console.log(
+  'Computed value:',
+  computedValue({
+    number: 0,
+    string: 'Result:'
+  })
+);
 ```
 
 Example output:
 ```
-Computed value: 2
+Result: 2
 ```
