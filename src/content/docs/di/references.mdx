@@ -140,6 +140,8 @@ const run = (
   randNumber: () => 0
 });
 
+// Generate a random number and log the
+// value using the provided logger
 const computeNumber = di.derive(
   [randNumber, logNumber],
   (randNumber, logNumber) => {
@@ -149,8 +151,8 @@ const computeNumber = di.derive(
   }
 );
 
-// Log generated number to console
 run(
+  // Log generated number to console
   di.inject(computeNumber, {
     logNumber: (n) => {
       console.log('Result:', n);
@@ -158,8 +160,8 @@ run(
   })
 );
 
-// Log generated number to a file
 run(
+  // Log generated number to a file
   di.inject(computeNumber, {
     logNumber: (n) => {
       appendFileSync('./debug.log', `Result: ${n}`);

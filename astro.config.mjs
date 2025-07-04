@@ -22,6 +22,9 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "r-u",
+      editLink: {
+        baseUrl: "https://github.com/re-utils/docs/edit/main",
+      },
       social: [
         {
           icon: "github",
