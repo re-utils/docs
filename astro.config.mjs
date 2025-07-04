@@ -6,8 +6,8 @@ import starlight from "@astrojs/starlight";
  * @param {string} prefix
  * @param {string[]} items
  */
-const createItem = (prefix, items) => ({
-  label: prefix,
+const createItem = (prefix, items, label = prefix) => ({
+  label,
   items: items.map((item) => ({
     label: item,
     slug: prefix.toLowerCase() + "/" + item.toLowerCase(),
@@ -40,6 +40,7 @@ export default defineConfig({
           "Semaphore",
           "Latch",
         ]),
+        createItem("di", ["References", "Examples"], "Dependency Injection"),
       ],
       expressiveCode: {
         themes: ["catppuccin-mocha"],

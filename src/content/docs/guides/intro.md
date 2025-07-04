@@ -1,6 +1,6 @@
 ---
 title: Intro
-description: Introduction to re-utils
+description: Introduction to re-utils.
 ---
 
 **re-utils** is a set of libraries optimized for size & performance while also provides excellent developer experience.

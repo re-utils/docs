@@ -1,0 +1,107 @@
+---
+title: Dependency Injection
+description: udic references.
+---
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+## Setup
+Requires TypeScript 5.4 or newer.
+
+<Tabs syncKey="packageManager">
+  <TabItem label="npm" icon="seti:npm">
+    ```sh
+    npm i udic
+    ```
+  </TabItem>
+  <TabItem label="bun" icon="bun">
+    ```sh
+    bun i udic
+    ```
+  </TabItem>
+  <TabItem label="pnpm" icon="pnpm">
+    ```sh
+    pnpm i udic
+    ```
+  </TabItem>
+  <TabItem label="yarn" icon="seti:yarn">
+    ```sh
+    yarn add udic
+    ```
+  </TabItem>
+</Tabs>
+
+## Create a service
+A service contains:
+- An unique identifier for injection.
+- A type describing possible operations.
+
+```ts
+import * as di from 'udic';
+
+// Example service
+const createUUID = di.service('createUUID')<
+  // Type of the UUID generator
+  () => string
+>();
+```
+
+A service will be optional if the service type includes `undefined`:
+```ts
+// An optional service
+const createUUID = di.service('createUUID')<
+  (() => string) | undefined
+>();
+```
+
+## Using a service
+To access the service, use `di.derive` to create a `Compute` based on the service value:
+```ts
+const createUUID = di.service('createUUID')<
+  // Type of the UUID generator
+  () => string
+>();
+
+const getUUID = di.derive(
+  [createUUID],
+  (createUUID) => {
+    // Log the generated UUID
+    console.log('Generated UUID:', createUUID());
+  }
+);
+```
+
+A `Compute` can be executed by providing required services implementation.
+```ts
+getUUID({
+  createUUID: () => 'abcd'
+});
+```
+
+The output of the `Compute` above will be:
+```
+Generated UUID: abcd
+```
+
+## Nesting computes
+A `Compute` can be used within another `Compute`.
+```ts
+const randNumber = di.service('randNumber')<number>();
+
+const computeNumber = di.derive(
+  [randNumber],
+  (randNumber) => randNumber + 1
+);
+
+// Using another compute
+const anotherCompute = di.derive(
+  [computeNumber],
+  (computedValue) => computedValue * 2
+);
+
+console.log('Computed value:', anotherCompute({ randNumber: 0 }));
+```
+
+Example output:
+```
+Computed value: 2
+```
