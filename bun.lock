@@ -5,12 +5,12 @@
       "name": "docs",
       "dependencies": {
         "@astrojs/starlight": "^0.34.4",
-        "@biomejs/biome": "^2.0.6",
-        "@fontsource/fira-mono": "^5.2.6",
+        "@fontsource-variable/roboto-mono": "^5.2.6",
         "astro": "^5.6.1",
         "sharp": "^0.34.2",
       },
       "devDependencies": {
+        "@biomejs/biome": "^2.0.6",
         "ciorent": "^0.8.0",
       },
     },
@@ -124,7 +124,7 @@
 
     "@expressive-code/plugin-text-markers": ["@expressive-code/plugin-text-markers@0.41.2", "", { "dependencies": { "@expressive-code/core": "^0.41.2" } }, "sha512-JFWBz2qYxxJOJkkWf96LpeolbnOqJY95TvwYc0hXIHf9oSWV0h0SY268w/5N3EtQaD9KktzDE+VIVwb9jdb3nw=="],
 
-    "@fontsource/fira-mono": ["@fontsource/fira-mono@5.2.6", "", {}, "sha512-6pyiGeFH+5DP5sICSwx5wu+9BlTEMTKki7bTppsEqXJysi1MiK82n6oSUaYkQWRLH51+DK7zv2JJsi82cOIS3g=="],
+    "@fontsource-variable/roboto-mono": ["@fontsource-variable/roboto-mono@5.2.6", "", {}, "sha512-U9iAWyACe0BkE8CpzBvvQnGSoFKXwuVmwC2zT3u66xe5EXfGsWmKtem+4xQHgvXazC6wq/m3hPJ5jjqgIkkTUQ=="],
 
     "@img/sharp-darwin-arm64": ["@img/sharp-darwin-arm64@0.34.2", "", { "optionalDependencies": { "@img/sharp-libvips-darwin-arm64": "1.1.0" }, "os": "darwin", "cpu": "arm64" }, "sha512-OfXHZPppddivUJnqyKoi5YVeHRkkNE2zUFT2gbpKxp/JZCFYEYubnMg+gOp6lWfasPrTS+KPosKqdI+ELYVDtg=="],
 

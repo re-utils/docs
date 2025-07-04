@@ -45,7 +45,7 @@ export default defineConfig({
         themes: ["catppuccin-mocha"],
       },
       customCss: [
-        "@fontsource/fira-mono/index.css",
+        "@fontsource-variable/roboto-mono",
         "./src/styles/globals.css",
       ],
     }),
