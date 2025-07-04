@@ -36,6 +36,7 @@ export default defineConfig({
         createItem("Concurrency", [
           "References",
           "Sleep",
+          "Yield",
           "Semaphore",
           "Latch",
         ]),
