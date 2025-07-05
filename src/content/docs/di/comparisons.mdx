@@ -31,14 +31,140 @@ Compare **udic** with other similar tools.
       Effect.Effect<number>
     >() {}
 
-    const main = Effect.gen(function* () {
+    const program = Effect.gen(function* () {
       const random = yield* Random;
       console.log('Random number:', yield* random);
     });
 
     Effect.runSync(
-      Effect.provideService(main, Random, Effect.sync(Math.random))
+      Effect.provideService(program, Random, Effect.sync(Math.random))
     );
+    ```
+  </TabItem>
+</Tabs>
+
+## Chained dependencies
+<Tabs syncKey="libDI">
+  <TabItem label="udic">
+    ```ts
+    import { service, derive, layer } from 'udic';
+
+    interface TConfig {
+      logLevel: string;
+      connection: string;
+    };
+    const config = service('config')<TConfig>();
+
+    type TLog = (msg: string) => void;
+    const log = service('log')<TLog>();
+
+    interface TDB {
+      query: (sql: string) => unknown
+    };
+    const db = service('db')<TDB>();
+
+    const logLayer = layer({
+      log: derive(
+        [config],
+        ({ logLevel }): TLog => (msg) => {
+          console.log(`[${logLevel}] ${msg}`);
+        }
+      )
+    }, {
+      config: {
+        logLevel: 'INFO',
+        connection: 'mysql://username:password@hostname:port/database_name'
+      }
+    });
+
+    const dbLayer = layer({
+      db: derive(
+        [config, log],
+        ({ connection }, log): TDB => ({
+          query: (sql: string) => {
+            log('Executing query: ' + sql);
+            return { result: 'Results from ' + connection };
+          }
+        })
+      )
+    }, logLayer);
+
+    const main = derive([db], (db) => db.query('SELECT * FROM users'));
+    console.log(main(dbLayer));
+    ```
+  </TabItem>
+  <TabItem label="effect">
+    ```ts
+    import { Effect, Context, Layer } from 'effect';
+
+    class Config extends Context.Tag('Config')<
+      Config,
+      Effect.Effect<{
+        logLevel: string;
+        connection: string;
+      }>
+    >() {};
+
+    class Logger extends Context.Tag('Logger')<
+      Logger,
+      (message: string) => Effect.Effect<void>
+    >() {};
+
+    class Database extends Context.Tag('Database')<
+      Database,
+      { readonly query: (sql: string) => Effect.Effect<unknown> }
+    >() {};
+
+    const ConfigLive = Layer.succeed(Config, Effect.succeed({
+      logLevel: 'INFO',
+      connection: 'mysql://username:password@hostname:port/database_name'
+    }));
+
+    const LoggerLive = Layer.effect(
+      Logger,
+      Effect.gen(function* () {
+        const config = yield* Config;
+        return (message) =>
+          Effect.gen(function* () {
+            const { logLevel } = yield* config;
+            console.log(`[${logLevel}] ${message}`);
+          });
+      })
+    );
+
+    const DatabaseLive = Layer.effect(
+      Database,
+      Effect.gen(function* () {
+        const config = yield* Config;
+        const { connection } = yield* config;
+
+        const log = yield* Logger;
+
+        return {
+          query: (sql: string) =>
+            Effect.gen(function* () {
+              yield* log("Executing query: " + sql);
+              return { result: 'Results from ' + connection };
+            })
+        }
+      })
+    );
+
+    const AppConfigLive = Layer.merge(ConfigLive, LoggerLive);
+
+    const MainLive = DatabaseLive.pipe(
+      Layer.provide(AppConfigLive),
+      Layer.provide(ConfigLive)
+    );
+
+    const program = Effect.gen(function* () {
+      const database = yield* Database;
+      return yield* database.query('SELECT * FROM users');
+    });
+
+    Effect.runPromise(
+      Effect.provide(program, MainLive)
+    ).then(console.log);
     ```
   </TabItem>
 </Tabs>
