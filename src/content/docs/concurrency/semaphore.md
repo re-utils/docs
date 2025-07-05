@@ -89,7 +89,7 @@ const sem = semaphore.init(2);
 
 // Try to run 5 tasks concurrently
 for (let i = 1; i <= 5; i++)
-  semaphore.queue(async () => {
+  semaphore.queue(sem, async () => {
     logTime(i, 'started');
     await sleep(1000);
     logTime(i, 'done');
