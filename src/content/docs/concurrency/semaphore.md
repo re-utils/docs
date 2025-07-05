@@ -95,3 +95,5 @@ for (let i = 1; i <= 5; i++)
     logTime(i, 'done');
   });
 ```
+
+`semaphore.queue` is usually faster as it avoids allocating a `Promise` to wait until a permit is available.
