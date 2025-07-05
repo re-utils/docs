@@ -87,7 +87,7 @@ const db = di.service('db')<DB>();
 
 Example usage:
 <Tabs>
-  <TabItem label="services.ts" icon="seti:typescript">
+  <TabItem label="src/services.ts" icon="seti:typescript">
     ```ts
     import { service } from 'udic';
     import { DatabaseSync } from 'node:sqlite';
@@ -95,7 +95,7 @@ Example usage:
     export const db = service('db')<DatabaseSync>();
     ```
   </TabItem>
-  <TabItem label="routes/posts.ts" icon="seti:typescript">
+  <TabItem label="src/routes/posts.ts" icon="seti:typescript">
     ```ts
     import { derive } from 'udic';
     import { router, handle } from '@mapl/web';
@@ -115,7 +115,9 @@ Example usage:
     );
     ```
   </TabItem>
-  <TabItem label="server.ts" icon="seti:typescript">
+</Tabs>
+<Tabs>
+  <TabItem label="src/server.ts" icon="seti:typescript">
     ```ts
     import { derive } from 'udic';
     import { DatabaseSync } from 'node:sqlite';
@@ -125,7 +127,7 @@ Example usage:
 
     export const app = derive(
       [posts],
-      // Register the sub-router
+      // Mount the sub-router
       (posts) => router([], [], {
         '/posts': posts
       })
@@ -143,7 +145,7 @@ Example usage:
   <TabItem label="tests/server.test.ts" icon="seti:typescript">
     ```ts
     import { DatabaseSync } from 'node:sqlite';
-    import { app } from '../server.ts';
+    import { app } from '../src/server.ts';
 
     // Test with an in-memory database
     const testApp = app({
