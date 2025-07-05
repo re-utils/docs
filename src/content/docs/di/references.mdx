@@ -3,7 +3,7 @@ title: Dependency Injection
 description: udic references.
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Tabs, TabItem, LinkCard, Steps } from '@astrojs/starlight/components';
 
 ## Setup
 Requires TypeScript 5.4 or newer.
@@ -31,6 +31,128 @@ Requires TypeScript 5.4 or newer.
   </TabItem>
 </Tabs>
 
+## Guides
+<LinkCard
+  title='Using Services'
+  href='../using-services'
+  description='Create and use services.'
+/>
+
+<LinkCard
+  title='Provide implementations'
+  href='../provide-implementations'
+  description='Provide implementations for computes.'
+/>
+
+## API
+Import:
+```ts
+import * as di from 'udic';
+
+// Named imports
+import { service, derive, inject } from 'udic';
+
+// Type imports
+import type {
+  Service, Compute, Dependency
+  InferResult, InferDependency
+} from 'udic';
+```
+
+#### `service()`
+- Type parameters:
+  + `T` - Service identifier type.
+- Parameters:
+  + `name: T` - Service identifier.
+- Returns `<K>() => di.Service<T, K> & K`
+
+Create a service.
+
+Example usage:
+```ts
+import * as di from 'udic';
+
+// di.Service<'db', DB> & 'db'
+const db = di.service('db')<DB>();
+```
+
+#### `derive()`
+- Type parameters:
+  + `const T extends di.Dependency[]` - Compute dependency list type.
+  + `const R` - Compute result type.
+- Parameters:
+  + `deps: T` - Compute dependency list.
+  + `f: (...args: { [K in keyof T] : di.InferResult<T[K]> }) => R` - The function to compute the result from provided dependencies.
+- Returns `di.Compute<di.InferDependency<T[number]>, R>` - A function that requires the implementations of the provided dependencies to execute.
+
+Example usage:
+<Tabs>
+  <TabItem label="services.ts" icon="seti:typescript">
+    ```ts
+    import { service } from 'udic';
+    import { DatabaseSync } from 'node:sqlite';
+
+    export const db = service('db')<DatabaseSync>();
+    ```
+  </TabItem>
+  <TabItem label="routes/posts.ts" icon="seti:typescript">
+    ```ts
+    import { derive } from 'udic';
+    import { router, handle } from '@mapl/web';
+
+    import { db } from '../services.ts';
+
+    export default derive(
+      [db],
+      (db) => {
+        const getPosts = db.prepare('SELECT * FROM posts');
+
+        // Create a sub-router
+        return router.init([], [
+          handle.get('/all', () => getPosts.all(), { type: 'json' })
+        ]);
+      }
+    );
+    ```
+  </TabItem>
+  <TabItem label="server.ts" icon="seti:typescript">
+    ```ts
+    import { derive } from 'udic';
+    import { DatabaseSync } from 'node:sqlite';
+    import { router, compile } from '@mapl/web';
+
+    import posts from './routes/posts.ts';
+
+    const app = derive(
+      [posts],
+
+      // Register the sub-router
+      (posts) => router([], [], {
+        '/posts': posts
+      })
+    )({
+      // Use an in-memory database
+      db: new DatabaseSync(':memory:')
+    });
+
+    // Export the fetch function (Works for Bun, Cloudflare Workers, ...)
+    export default {
+      fetch: compile(app)
+    };
+    ```
+  </TabItem>
+</Tabs>
+
+#### `inject()`
+- Type parameters:
+  + `T` - Dependency type of input compute.
+  + `R` - Result type of input compute.
+  + `D extends Partial<T>` - Provided dependency type.
+- Parameters:
+  + `compute: di.Compute<T, R>` - Target compute to inject dependencies.
+  + `deps: D` - Dependencies to inject to the compute.
+- Returns `di.Compute<di.Prettify<Omit<T, keyof D>>, R>` - A new compute with the provided services.
+
 ## Links
-- Github: https://github.com/re-utils/di
-- npm: https://npmjs.com/package/udic
+- **Github**: https://github.com/re-utils/di
+- **npm**: https://npmjs.com/package/udic
