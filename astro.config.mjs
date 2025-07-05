@@ -46,7 +46,7 @@ export default defineConfig({
           "Semaphore",
           "Latch",
         ]),
-        createItem("di", ["References", "Examples"], "Dependency Injection"),
+        createItem("di", ["References", "API"], "Dependency Injection"),
       ],
       expressiveCode: {
         themes: ["catppuccin-mocha"],
