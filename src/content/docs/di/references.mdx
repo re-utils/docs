@@ -68,14 +68,6 @@ import type {
 
 Create a service.
 
-Example usage:
-```ts
-import * as di from 'udic';
-
-// di.Service<'db', DB> & 'db'
-const db = di.service('db')<DB>();
-```
-
 #### `derive()`
 - Type parameters:
   + `const T extends di.Dependency[]` - Compute dependency list type.
@@ -84,78 +76,6 @@ const db = di.service('db')<DB>();
   + `deps: T` - Compute dependency list.
   + `f: (...args: { [K in keyof T] : di.InferResult<T[K]> }) => R` - The function to compute the result from provided dependencies.
 - Returns `di.Compute<di.InferDependency<T[number]>, R>` - A function that requires the implementations of the provided dependencies to execute.
-
-Example usage:
-<Tabs>
-  <TabItem label="src/services.ts" icon="seti:typescript">
-    ```ts
-    import { service } from 'udic';
-    import { DatabaseSync } from 'node:sqlite';
-
-    export const db = service('db')<DatabaseSync>();
-    ```
-  </TabItem>
-  <TabItem label="src/routes/posts.ts" icon="seti:typescript">
-    ```ts
-    import { derive } from 'udic';
-    import { router, handle } from '@mapl/web';
-
-    import { db } from '../services.ts';
-
-    export default derive(
-      [db],
-      (db) => {
-        const getPosts = db.prepare('SELECT * FROM posts');
-
-        // Create a sub-router
-        return router.init([], [
-          handle.get('/all', () => getPosts.all(), { type: 'json' })
-        ]);
-      }
-    );
-    ```
-  </TabItem>
-</Tabs>
-<Tabs>
-  <TabItem label="src/server.ts" icon="seti:typescript">
-    ```ts
-    import { derive } from 'udic';
-    import { DatabaseSync } from 'node:sqlite';
-    import { router, compile } from '@mapl/web';
-
-    import posts from './routes/posts.ts';
-
-    export const app = derive(
-      [posts],
-      // Mount the sub-router
-      (posts) => router([], [], {
-        '/posts': posts
-      })
-    );
-
-    // Export the fetch function (Works for Bun, Cloudflare Workers, ...)
-    export default {
-      fetch: compile(
-        // Example production database
-        app({ db: new DatabaseSync('./main.db') })
-      )
-    };
-    ```
-  </TabItem>
-  <TabItem label="tests/server.test.ts" icon="seti:typescript">
-    ```ts
-    import { DatabaseSync } from 'node:sqlite';
-    import { app } from '../src/server.ts';
-
-    // Test with an in-memory database
-    const testApp = app({
-      db: new DatabaseSync(':memory:')
-    });
-
-    // Test code...
-    ```
-  </TabItem>
-</Tabs>
 
 #### `inject()`
 - Type parameters:
