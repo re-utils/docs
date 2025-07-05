@@ -10,7 +10,7 @@ const createItem = (prefix, items, label = prefix) => ({
   label,
   items: items.map((item) => ({
     label: item,
-    slug: prefix.toLowerCase() + "/" + item.toLowerCase(),
+    slug: prefix.toLowerCase() + "/" + item.toLowerCase().replaceAll(" ", "-"),
   })),
 });
 
@@ -46,7 +46,11 @@ export default defineConfig({
           "Semaphore",
           "Latch",
         ]),
-        createItem("di", ["References", "API"], "Dependency Injection"),
+        createItem(
+          "di",
+          ["References", "Using services", "Provide implementations", "API"],
+          "Dependency Injection",
+        ),
       ],
       expressiveCode: {
         themes: ["catppuccin-mocha"],
