@@ -14,7 +14,7 @@
         "@types/bun": "^1.2.18",
         "@types/node": "^24.0.10",
         "ciorent": "^0.8.0",
-        "udic": "^0.2.0",
+        "udic": "^0.2.2",
       },
     },
   },
@@ -841,7 +841,7 @@
 
     "typescript": ["typescript@5.8.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ=="],
 
-    "udic": ["udic@0.2.0", "", {}, "sha512-MPnNjNGEBLWfDwvPKwuQv1kldKcmufJXqiyyjT7loT/WvqLEijIWpfly1x1/FzJAsxqt862QxpT6ZTMIUdc8ZA=="],
+    "udic": ["udic@0.2.2", "", {}, "sha512-zwSVQ5J7P1FpshBGM8RYiKkJ6Yfu6BzjZDrVA4gvPv+j4a0HHwqEfgWYeeCCfw/n6/uvnWDrbf7rngUz+I+mXg=="],
 
     "ufo": ["ufo@1.6.1", "", {}, "sha512-9a4/uxlTWJ4+a5i0ooc1rU7C7YOw3wT+UGqdeNNHWnOF9qcMBgLRS+4IYUqbczewFx4mLEig6gawh7X6mFlEkA=="],
 

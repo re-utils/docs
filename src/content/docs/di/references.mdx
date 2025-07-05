@@ -174,3 +174,59 @@ Example output (both `debug.log` & console):
 ```
 Result: 0
 ```
+
+## Compute caching
+Compute results are cached within the same dependencies map.
+
+In this example, `generateNumber` computed result get cached:
+```ts
+import { derive } from 'udic';
+
+const generateNumber = derive([], () => Math.random());
+
+const processNumber1 = derive([generateNumber], (number) => number * 2);
+const processNumber2 = derive([generateNumber], (number) => number * 2);
+
+const validateGeneratedNumber = derive(
+  [processNumber1, processNumber2],
+  (number1, number2) => number1 === number2
+);
+
+console.log(validateGeneratedNumber({})); // true
+```
+
+`inject()` creates a child context, so that `inject()` with different dependencies don't use each other cached result.
+```ts
+import * as di from 'udic';
+
+const id = di.service('id')<string>();
+const label = di.service('label')<string>();
+
+const generatedNumber = di.derive([], () => Math.random());
+const generatedString = di.derive(
+  [id, generatedNumber],
+  (id, generatedNumber) => id + ' - ' + generatedNumber
+);
+
+const printString = di.derive(
+  [
+    // Will generate different numbers
+    di.inject(generatedString, { id: 'a' }),
+    di.inject(generatedString, { id: 'b' })
+  ],
+  (string1, string2) => {
+    console.log(string1);
+    console.log(string2);
+  }
+);
+
+printString({});
+```
+
+Example output:
+```
+a - 0.3950104748122306
+b - 0.4041106096869628
+```
+
+It is recommended to **not** have a dependency graph like the above examples. This section is only here for users to be aware of the quirks.
