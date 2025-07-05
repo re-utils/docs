@@ -26,7 +26,7 @@ Compare **udic** with other similar tools.
     ```ts
     import { Effect, Context } from 'effect';
 
-    class Random extends Context.Tag('random')<
+    class Random extends Context.Tag('Random')<
       Random,
       Effect.Effect<number>
     >() {}
@@ -43,7 +43,7 @@ Compare **udic** with other similar tools.
   </TabItem>
 </Tabs>
 
-## Chained dependencies
+#### Chained dependencies
 <Tabs syncKey="libDI">
   <TabItem label="udic">
     ```ts
@@ -124,6 +124,7 @@ Compare **udic** with other similar tools.
       Logger,
       Effect.gen(function* () {
         const config = yield* Config;
+
         return (message) =>
           Effect.gen(function* () {
             const { logLevel } = yield* config;
@@ -159,12 +160,12 @@ Compare **udic** with other similar tools.
 
     const program = Effect.gen(function* () {
       const database = yield* Database;
-      return yield* database.query('SELECT * FROM users');
+      console.log(yield* database.query('SELECT * FROM users'));
     });
 
-    Effect.runPromise(
+    Effect.runSync(
       Effect.provide(program, MainLive)
-    ).then(console.log);
+    );
     ```
   </TabItem>
 </Tabs>
