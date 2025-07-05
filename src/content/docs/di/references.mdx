@@ -123,22 +123,34 @@ Example usage:
 
     import posts from './routes/posts.ts';
 
-    const app = derive(
+    export const app = derive(
       [posts],
-
       // Register the sub-router
       (posts) => router([], [], {
         '/posts': posts
       })
-    )({
-      // Use an in-memory database
-      db: new DatabaseSync(':memory:')
-    });
+    );
 
     // Export the fetch function (Works for Bun, Cloudflare Workers, ...)
     export default {
-      fetch: compile(app)
+      fetch: compile(
+        // Example production database
+        app({ db: new DatabaseSync('./main.db') })
+      )
     };
+    ```
+  </TabItem>
+  <TabItem label="tests/server.test.ts" icon="seti:typescript">
+    ```ts
+    import { DatabaseSync } from 'node:sqlite';
+    import { app } from '../server.ts';
+
+    // Test with an in-memory database
+    const testApp = app({
+      db: new DatabaseSync(':memory:')
+    });
+
+    // Test code...
     ```
   </TabItem>
 </Tabs>
