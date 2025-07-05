@@ -34,7 +34,7 @@ const createUUID = di.service('createUUID')<
   () => string
 >();
 
-const getUUID = di.derive(
+const printUUID = di.derive(
   [createUUID],
   (createUUID) => {
     // Log the generated UUID
@@ -45,7 +45,7 @@ const getUUID = di.derive(
 
 A compute can be executed by providing required services implementation.
 ```ts
-getUUID({
+printUUID({
   createUUID: () => 'abcd'
 });
 ```

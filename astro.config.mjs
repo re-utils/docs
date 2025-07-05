@@ -48,7 +48,12 @@ export default defineConfig({
         ]),
         createItem(
           "di",
-          ["References", "Using services", "Provide implementations"],
+          [
+            "References",
+            "Using services",
+            "Provide implementations",
+            "Comparisons",
+          ],
           "Dependency Injection",
         ),
       ],

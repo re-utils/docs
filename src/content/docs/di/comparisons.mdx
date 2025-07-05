@@ -1,0 +1,44 @@
+---
+title: Comparisons
+description: Comparisons with other DI libraries
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Compare **udic** with other similar tools.
+
+#### Using a service
+<Tabs syncKey="libDI">
+  <TabItem label="udic">
+    ```ts
+    import { service, derive } from 'udic';
+
+    const random = service('random')<() => number>();
+
+    const main = derive([random], (random) => {
+      console.log('Random number:', random());
+    });
+
+    main({ random: Math.random });
+    ```
+  </TabItem>
+  <TabItem label="effect">
+    ```ts
+    import { Effect, Context } from 'effect';
+
+    class Random extends Context.Tag('random')<
+      Random,
+      Effect.Effect<number>
+    >() {}
+
+    const main = Effect.gen(function* () {
+      const random = yield* Random;
+      console.log('Random number:', yield* random);
+    });
+
+    Effect.runSync(
+      Effect.provideService(main, Random, Effect.sync(Math.random))
+    );
+    ```
+  </TabItem>
+</Tabs>
