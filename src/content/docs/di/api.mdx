@@ -24,7 +24,7 @@ import type {
   + `T` - Service identifier type.
 - Parameters:
   + `name: T` - Service identifier.
-- Returns `<K>() => Service<T, K> & K`
+- Returns `<K>() => di.Service<T, K> & K`
 
 Create a service.
 
@@ -111,4 +111,4 @@ Example usage:
 - Parameters:
   + `compute: di.Compute<T, R>` - Target compute to inject dependencies.
   + `deps: D` - Dependencies to inject to the compute.
-- Returns `di.Compute<Prettify<Omit<T, keyof D>>, R>` - A new compute with the provided services.
+- Returns `di.Compute<di.Prettify<Omit<T, keyof D>>, R>` - A new compute with the provided services.
