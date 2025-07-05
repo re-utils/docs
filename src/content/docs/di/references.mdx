@@ -54,7 +54,7 @@ const createUUID = di.service('createUUID')<
 ```
 
 ## Using a service
-To access the service, use `di.derive` to create a `Compute` based on the service value:
+To access the service, use `di.derive` to create a compute based on the service value:
 ```ts
 import * as di from 'udic';
 
@@ -72,20 +72,20 @@ const getUUID = di.derive(
 );
 ```
 
-A `Compute` can be executed by providing required services implementation.
+A compute can be executed by providing required services implementation.
 ```ts
 getUUID({
   createUUID: () => 'abcd'
 });
 ```
 
-The output of the `Compute` above will be:
+The output of the compute above will be:
 ```
 Generated UUID: abcd
 ```
 
 ## Nesting computes
-A `Compute` can be used within another `Compute`.
+A compute can be used within another compute.
 ```ts
 import * as di from 'udic';
 
