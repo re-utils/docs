@@ -5,9 +5,11 @@ description: Comparisons with other DI libraries
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-Compare **udic** with other similar tools.
+Compare **udic** with similar tools.
 
-#### Using a service
+## Basic injection
+Use and inject one dependency.
+
 <Tabs syncKey="libDI">
   <TabItem label="udic">
     ```ts
@@ -43,7 +45,9 @@ Compare **udic** with other similar tools.
   </TabItem>
 </Tabs>
 
-#### Chained dependencies
+## Chained dependencies
+Use and inject 3 dependencies, with `log` depends on `config` and `db` depends on both `log` and `config`.
+
 <Tabs syncKey="libDI">
   <TabItem label="udic">
     ```ts
