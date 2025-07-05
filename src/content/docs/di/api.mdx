@@ -8,8 +8,15 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 Import:
 ```ts
 import * as di from 'udic';
-// Or
+
+// Named imports
 import { service, derive, inject } from 'udic';
+
+// Type imports
+import type {
+  Service, Compute, Dependency
+  InferResult, InferDependency
+} from 'udic';
 ```
 
 #### `service()`
@@ -36,7 +43,7 @@ const db = di.service('db')<DB>();
 - Parameters:
   + `deps: T` - Compute dependency list.
   + `f: (...args: { [K in keyof T] : di.InferResult<T[K]> }) => R` - The function to compute the result from provided dependencies.
-- Returns `Compute<InferDependency<T[number]>, R>` - A function that requires the implementations of the provided dependencies to execute.
+- Returns `di.Compute<di.InferDependency<T[number]>, R>` - A function that requires the implementations of the provided dependencies to execute.
 
 Example usage:
 <Tabs>
@@ -104,4 +111,4 @@ Example usage:
 - Parameters:
   + `compute: di.Compute<T, R>` - Target compute to inject dependencies.
   + `deps: D` - Dependencies to inject to the compute.
-- Returns `Compute<Prettify<Omit<T, keyof D>>, R>` - A new compute with the provided services.
+- Returns `di.Compute<Prettify<Omit<T, keyof D>>, R>` - A new compute with the provided services.

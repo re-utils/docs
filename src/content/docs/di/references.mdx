@@ -202,17 +202,20 @@ import * as di from 'udic';
 const id = di.service('id')<string>();
 const label = di.service('label')<string>();
 
-const generatedNumber = di.derive([], () => Math.random());
 const generatedString = di.derive(
-  [id, generatedNumber],
-  (id, generatedNumber) => id + ' - ' + generatedNumber
+  [id],
+  (id) => id + ' - ' + Math.random()
+);
+const result = di.derive(
+  [label, generatedString],
+  (label, generatedString) => label + ': ' + generatedString
 );
 
 const printString = di.derive(
   [
     // Will generate different numbers
-    di.inject(generatedString, { id: 'a' }),
-    di.inject(generatedString, { id: 'b' })
+    di.inject(result, { id: 'a' }),
+    di.inject(result, { id: 'b' })
   ],
   (string1, string2) => {
     console.log(string1);
@@ -220,13 +223,15 @@ const printString = di.derive(
   }
 );
 
-printString({});
+printString({
+  label: 'Result'
+});
 ```
 
 Example output:
 ```
-a - 0.3950104748122306
-b - 0.4041106096869628
+Result: a - 0.12060530798403102
+Result: b - 0.6586330037115373
 ```
 
-It is recommended to **not** have a dependency graph like the above examples. This section is only here for users to be aware of the quirks.
+It is recommended that your compute is side-effect free to avoid these issues.
