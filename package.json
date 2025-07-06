@@ -22,6 +22,8 @@
     "@types/node": "^24.0.10",
     "ciorent": "^0.8.0",
     "effect": "^3.16.12",
+    "oxc-minify": "^0.75.1",
+    "rolldown": "^1.0.0-beta.24",
     "udic": "^0.2.3"
   }
 }

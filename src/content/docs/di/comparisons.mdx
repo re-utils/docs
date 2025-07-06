@@ -1,175 +1,191 @@
 ---
 title: Comparisons
-description: Comparisons with other DI libraries
+description: Compare **udic** with other DI libraries.
 ---
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-Compare **udic** with similar tools.
+Compare **udic** with other DI libraries.
 
 ## Basic injection
 Use and inject one dependency.
-
-<Tabs syncKey="libDI">
+<Tabs syncKey="libComparison0">
   <TabItem label="udic">
+    - Bundled: **`479B`**
+    - Minified: **`260B`**
+    - Gzipped: **`201B`**
     ```ts
     import { service, derive } from 'udic';
-
+    
     const random = service('random')<() => number>();
-
+    
     const main = derive([random], (random) => {
       console.log('Random number:', random());
     });
-
+    
     main({ random: Math.random });
     ```
   </TabItem>
   <TabItem label="effect">
+    - Bundled: **`942.2KB`**
+    - Minified: **`297.52KB`**
+    - Gzipped: **`77.7KB`**
     ```ts
     import { Effect, Context } from 'effect';
-
-    class Random extends Context.Tag('Random')<
-      Random,
-      Effect.Effect<number>
-    >() {}
-
+    
+    class Random extends Context.Tag('Random')<Random, Effect.Effect<number>>() {}
+    
     const program = Effect.gen(function* () {
       const random = yield* Random;
       console.log('Random number:', yield* random);
     });
-
+    
     Effect.runSync(
-      Effect.provideService(program, Random, Effect.sync(Math.random))
+      Effect.provideService(program, Random, Effect.sync(Math.random)),
     );
     ```
   </TabItem>
 </Tabs>
 
+
 ## Chained dependencies
 Use and inject 3 dependencies, with `log` depends on `config` and `db` depends on both `log` and `config`.
-
-<Tabs syncKey="libDI">
+<Tabs syncKey="libComparison1">
   <TabItem label="udic">
+    - Bundled: **`1.04KB`**
+    - Minified: **`678B`**
+    - Gzipped: **`428B`**
     ```ts
     import { service, derive, layer } from 'udic';
-
+    
     interface TConfig {
       logLevel: string;
       connection: string;
-    };
+    }
     const config = service('config')<TConfig>();
-
+    
     type TLog = (msg: string) => void;
     const log = service('log')<TLog>();
-
+    
     interface TDB {
-      query: (sql: string) => unknown
-    };
+      query: (sql: string) => unknown;
+    }
     const db = service('db')<TDB>();
-
-    const logLayer = layer({
-      log: derive(
-        [config],
-        ({ logLevel }): TLog => (msg) => {
-          console.log(`[${logLevel}] ${msg}`);
-        }
-      )
-    }, {
-      config: {
-        logLevel: 'INFO',
-        connection: 'mysql://username:password@hostname:port/database_name'
-      }
-    });
-
-    const dbLayer = layer({
-      db: derive(
-        [config, log],
-        ({ connection }, log): TDB => ({
-          query: (sql: string) => {
-            log('Executing query: ' + sql);
-            return { result: 'Results from ' + connection };
-          }
-        })
-      )
-    }, logLayer);
-
+    
+    const logLayer = layer(
+      {
+        log: derive(
+          [config],
+          ({ logLevel }): TLog =>
+            (msg) => {
+              console.log(`[${logLevel}] ${msg}`);
+            },
+        ),
+      },
+      {
+        config: {
+          logLevel: 'INFO',
+          connection: 'mysql://username:password@hostname:port/database_name',
+        },
+      },
+    );
+    
+    const dbLayer = layer(
+      {
+        db: derive(
+          [config, log],
+          ({ connection }, log): TDB => ({
+            query: (sql: string) => {
+              log('Executing query: ' + sql);
+              return { result: 'Results from ' + connection };
+            },
+          }),
+        ),
+      },
+      logLayer,
+    );
+    
     const main = derive([db], (db) => db.query('SELECT * FROM users'));
     console.log(main(dbLayer));
     ```
   </TabItem>
   <TabItem label="effect">
+    - Bundled: **`1MB`**
+    - Minified: **`312.97KB`**
+    - Gzipped: **`81.36KB`**
     ```ts
     import { Effect, Context, Layer } from 'effect';
-
+    
     class Config extends Context.Tag('Config')<
       Config,
       Effect.Effect<{
         logLevel: string;
         connection: string;
       }>
-    >() {};
-
+    >() {}
+    
     class Logger extends Context.Tag('Logger')<
       Logger,
       (message: string) => Effect.Effect<void>
-    >() {};
-
+    >() {}
+    
     class Database extends Context.Tag('Database')<
       Database,
       { readonly query: (sql: string) => Effect.Effect<unknown> }
-    >() {};
-
-    const ConfigLive = Layer.succeed(Config, Effect.succeed({
-      logLevel: 'INFO',
-      connection: 'mysql://username:password@hostname:port/database_name'
-    }));
-
+    >() {}
+    
+    const ConfigLive = Layer.succeed(
+      Config,
+      Effect.succeed({
+        logLevel: 'INFO',
+        connection: 'mysql://username:password@hostname:port/database_name',
+      }),
+    );
+    
     const LoggerLive = Layer.effect(
       Logger,
       Effect.gen(function* () {
         const config = yield* Config;
-
+    
         return (message) =>
           Effect.gen(function* () {
             const { logLevel } = yield* config;
             console.log(`[${logLevel}] ${message}`);
           });
-      })
+      }),
     );
-
+    
     const DatabaseLive = Layer.effect(
       Database,
       Effect.gen(function* () {
         const config = yield* Config;
         const { connection } = yield* config;
-
+    
         const log = yield* Logger;
-
+    
         return {
           query: (sql: string) =>
             Effect.gen(function* () {
-              yield* log("Executing query: " + sql);
+              yield* log('Executing query: ' + sql);
               return { result: 'Results from ' + connection };
-            })
-        }
-      })
+            }),
+        };
+      }),
     );
-
+    
     const AppConfigLive = Layer.merge(ConfigLive, LoggerLive);
-
+    
     const MainLive = DatabaseLive.pipe(
       Layer.provide(AppConfigLive),
-      Layer.provide(ConfigLive)
+      Layer.provide(ConfigLive),
     );
-
+    
     const program = Effect.gen(function* () {
       const database = yield* Database;
       console.log(yield* database.query('SELECT * FROM users'));
     });
-
-    Effect.runSync(
-      Effect.provide(program, MainLive)
-    );
+    
+    Effect.runSync(Effect.provide(program, MainLive));
     ```
   </TabItem>
 </Tabs>
