@@ -36,7 +36,7 @@ for (let i = 1; i <= 5; i++)
 ```
 
 With semaphore the output will be:
-```
+```txt showLineNumbers=false
 [19.2ms] 1 started
 [19.4ms] 2 started
 [1020.0ms] 1 done
@@ -50,7 +50,7 @@ With semaphore the output will be:
 ```
 
 Without semaphore, all 5 tasks will start without waiting:
-```
+```txt showLineNumbers=false
 [18.2ms] 1 started
 [18.3ms] 2 started
 [18.3ms] 3 started

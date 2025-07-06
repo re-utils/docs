@@ -54,7 +54,7 @@ run(
 ```
 
 Example output (both `debug.log` & console):
-```
+```txt showLineNumbers=false
 Result: 0
 ```
 
@@ -112,7 +112,7 @@ printString({
 ```
 
 Example output:
-```
+```txt showLineNumbers=false
 Result: a - 0.12060530798403102
 Result: b - 0.6586330037115373
 ```

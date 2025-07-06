@@ -39,7 +39,7 @@ for (let i = 1; i <= 3; i++)
 ```
 
 With yield, other asynchronous tasks can be executed without getting blocked:
-```
+```txt showLineNumbers=false
 [45.1ms] Task 0 started
 [45.6ms] Task 1 started
 [45.8ms] Task 2 started
@@ -51,7 +51,7 @@ With yield, other asynchronous tasks can be executed without getting blocked:
 ```
 
 Without yield, other asynchronous tasks have to wait for the expensive task to finish before starting execution.
-```
+```txt showLineNumbers=false
 [49.1ms] Task 0 started
 [1154.6ms] Task 0 done: 950725777197346.9
 [1156.0ms] Task 1 started

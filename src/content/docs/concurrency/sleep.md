@@ -23,7 +23,7 @@ logTime('End');
 ```
 
 Example output:
-```
+```txt showLineNumbers=false
 [20.0ms] Start async sleep
 [520.5ms] End
 [520.6ms] Start sync sleep

@@ -49,7 +49,7 @@ printUUID({
 ```
 
 The output of the compute above will be:
-```
+```txt showLineNumbers=false
 Generated UUID: abcd
 ```
 
@@ -84,6 +84,6 @@ console.log(
 ```
 
 Example output:
-```
+```txt showLineNumbers=false
 Result: 2
 ```

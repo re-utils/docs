@@ -31,13 +31,13 @@ latch.open(startFetch);
 ```
 
 With latch, the output will be:
-```
+```txt showLineNumbers=false
 [533.5ms] Fetch started
 [969.9ms] Fetch done
 ```
 
 Without latch, the fetch call runs concurrently with `sleep`:
-```
+```txt showLineNumbers=false
 [30.9ms] Fetch started
 [494.7ms] Fetch done
 ```
