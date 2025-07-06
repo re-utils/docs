@@ -14,7 +14,7 @@ Use and inject one dependency.
     - Bundle size: **`479B`**
     - Minified size: **`260B`**
     - Gzipped size: **`201B`**
-    - Runtime: **`116.19ms`**
+    - Runtime: **`31.09ms`**
     ```ts
     import { service, derive } from 'udic';
     
@@ -31,7 +31,7 @@ Use and inject one dependency.
     - Bundle size: **`78.64KB`**
     - Minified size: **`28.48KB`**
     - Gzipped size: **`8.41KB`**
-    - Runtime: **`129.78ms`**
+    - Runtime: **`35.17ms`**
     ```ts
     import { Micro, Context } from 'effect';
     
@@ -52,69 +52,64 @@ Use and inject one dependency.
 Use and inject 3 dependencies, with `log` depends on `config` and `db` depends on both `log` and `config`.
 <Tabs syncKey='libComparison1'>
   <TabItem label='udic'>
-    - Bundle size: **`1.04KB`**
-    - Minified size: **`678B`**
-    - Gzipped size: **`428B`**
-    - Runtime: **`117.81ms`**
+    - Bundle size: **`1.14KB`**
+    - Minified size: **`751B`**
+    - Gzipped size: **`458B`**
+    - Runtime: **`31.35ms`**
     ```ts
-    import { service, derive, layer } from 'udic';
+    import * as di from 'udic';
     
     interface TConfig {
       logLevel: string;
       connection: string;
     }
-    const config = service('config')<TConfig>();
+    const config = di.service('config')<TConfig>();
     
     type TLog = (msg: string) => void;
-    const log = service('log')<TLog>();
+    const log = di.service('log')<TLog>();
     
     interface TDB {
       query: (sql: string) => unknown;
     }
-    const db = service('db')<TDB>();
+    const db = di.service('db')<TDB>();
     
-    const logLayer = layer(
-      {
-        log: derive(
-          [config],
-          ({ logLevel }): TLog =>
-            (msg) => {
-              console.log(`[${logLevel}] ${msg}`);
-            },
-        ),
-      },
-      {
-        config: {
-          logLevel: 'INFO',
-          connection: 'mysql://username:password@hostname:port/database_name',
+    // Create service implementations that depends on other services
+    const logLayer = di.layer(log, di.derive(
+      [config],
+      ({ logLevel }): TLog =>
+        (msg) => {
+          console.log(`[${logLevel}] ${msg}`);
         },
-      },
-    );
+    ));
     
-    const dbLayer = layer(
-      {
-        db: derive(
-          [config, log],
-          ({ connection }, log): TDB => ({
-            query: (sql: string) => {
-              log('Executing query: ' + sql);
-              return { result: 'Results from ' + connection };
-            },
-          }),
-        ),
-      },
-      logLayer,
-    );
+    const dbLayer = di.layer(db, di.derive(
+      [config, log],
+      ({ connection }, log): TDB => ({
+        query: (sql: string) => {
+          log('Executing query: ' + sql);
+          return { result: 'Results from ' + connection };
+        },
+      }),
+    ));
     
-    const main = derive([db], (db) => db.query('SELECT * FROM users'));
-    console.log(main(dbLayer));
+    // Provide implementations for the layer
+    const logLive = di.provide([logLayer], {
+      config: {
+        logLevel: 'INFO',
+        connection: 'mysql://username:password@hostname:port/database_name',
+      },
+    });
+    const dbLive = di.provide([dbLayer], logLive);
+    
+    const main = di.derive([db], (db) => db.query('SELECT * FROM users'));
+    console.log(main(dbLive));
     ```
   </TabItem>
   <TabItem label='effect'>
     - Bundle size: **`1MB`**
     - Minified size: **`312.97KB`**
     - Gzipped size: **`81.36KB`**
-    - Runtime: **`308.21ms`**
+    - Runtime: **`77.71ms`**
     ```ts
     import { Effect, Context, Layer } from 'effect';
     
