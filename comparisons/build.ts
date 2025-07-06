@@ -30,9 +30,9 @@ const reportSize = async (path: string) => {
   const minifiedCode = minify(path, code).code!;
 
   return {
-    'Bundled': size(code),
-    'Minified': size(minifiedCode),
-    'Gzipped': gzipSize(minifiedCode)
+    Bundled: size(code),
+    Minified: size(minifiedCode),
+    Gzipped: gzipSize(minifiedCode),
   };
 };
 
@@ -56,12 +56,12 @@ const processTest = async (c: TTest) => {
       (await readFile(path, 'utf8')).trim() +
       '\n```';
 
-    return `  <TabItem label="${key}">\n${tab(tabItem, 4)}\n  </TabItem>`;
+    return `  <TabItem label='${key}'>\n${tab(tabItem, 4)}\n  </TabItem>`;
   });
 
   return `## ${c.title}
 ${c.description}
-<Tabs syncKey="libComparison${currentID++}">
+<Tabs syncKey='libComparison${currentID++}'>
 ${(await Promise.all(processed)).join('\n')}
 </Tabs>
 `;
@@ -85,7 +85,3 @@ ${c.description}
     res,
   );
 };
-
-import di from './di/index.js';
-
-processCategory(di).then(console.log);
