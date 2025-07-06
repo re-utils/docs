@@ -44,6 +44,10 @@ Requires TypeScript 5.4 or newer.
   description='Provide implementations for computes.'
 />
 
+## Links
+- **Github**: https://github.com/re-utils/di
+- **npm**: https://npmjs.com/package/udic
+
 ## API
 Import:
 ```ts
@@ -86,7 +90,3 @@ Create a service.
   + `compute: di.Compute<T, R>` - Target compute to inject dependencies.
   + `deps: D` - Dependencies to inject to the compute.
 - Returns `di.Compute<di.Prettify<Omit<T, keyof D>>, R>` - A new compute with the provided services.
-
-## Links
-- **Github**: https://github.com/re-utils/di
-- **npm**: https://npmjs.com/package/udic
