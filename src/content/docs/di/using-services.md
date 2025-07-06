@@ -7,7 +7,7 @@ To create a service, you need to provide:
 - An unique identifier for injection.
 - A type describing possible operations.
 
-```ts twoslash
+```ts
 import * as di from 'udic';
 
 // Example service
@@ -26,7 +26,7 @@ const createUUID = di.service('createUUID')<
 ```
 
 To access the service, use `di.derive` to create a compute based on the service value:
-```ts twoslash
+```ts
 import * as di from 'udic';
 
 const createUUID = di.service('createUUID')<
@@ -55,7 +55,7 @@ Generated UUID: abcd
 
 ## Nesting computes
 A compute can be used within another compute.
-```ts twoslash
+```ts
 import * as di from 'udic';
 
 const number = di.service('number')<number>();

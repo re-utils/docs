@@ -20,11 +20,11 @@ export const startupRunner = (requiredItems: number) => {
           await Bun.$`hyperfine -w 20 -N --export-json ${OUTPUT} ${COMMANDS}`;
           const groups = Object.groupBy(
             (await Bun.file(OUTPUT).json()).results as any[],
-            ({ command }) => command
+            ({ command }) => command,
           );
 
+          // @ts-ignore
           for (const key in groups)
-            // @ts-ignore
             results[key] = formatSecond(groups[key][0].mean);
         } catch (e) {
           console.error('Running benchmark failed:', e);

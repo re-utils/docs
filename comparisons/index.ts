@@ -4,7 +4,14 @@ import { resolve } from 'node:path/posix';
 import { build } from 'rolldown';
 import { minify } from 'oxc-minify';
 
-import { EXT, gzipSize, insertTab, stringSize, type TCategory, type TTest } from './utils.js';
+import {
+  EXT,
+  gzipSize,
+  insertTab,
+  stringSize,
+  type TCategory,
+  type TTest,
+} from './utils.js';
 import { startupRunner, type StartupRunner } from './startup.js';
 
 const report = async (path: string, startupRunner: StartupRunner) => {
@@ -22,8 +29,8 @@ const report = async (path: string, startupRunner: StartupRunner) => {
   const code = out.output[0].code;
   const minifiedCode = minify(path, code, {
     mangle: {
-      toplevel: true
-    }
+      toplevel: true,
+    },
   }).code!;
   await Bun.write(outputBundle, minifiedCode);
 
@@ -31,7 +38,7 @@ const report = async (path: string, startupRunner: StartupRunner) => {
     'Bundle size': stringSize(code),
     'Minified size': stringSize(minifiedCode),
     'Gzipped size': gzipSize(minifiedCode),
-    'Runtime': await startupRunner.addCommand('node ' + outputBundle),
+    Runtime: await startupRunner.addCommand('node ' + outputBundle),
   };
 };
 

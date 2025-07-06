@@ -32,13 +32,14 @@ export const toByte = (num: number) =>
     : num >= 1e3
       ? +(num / 1e3).toFixed(2) + 'KB'
       : num + 'B';
-export const formatSecond = (num: number) => num >= 1
-  ? +num.toFixed(2) + 's'
-  : num >= 1e-3
-    ? +(num * 1e3).toFixed(2) + 'ms'
-    : num >= 1e-6
-      ? +(num * 1e6).toFixed(2) + 'µs'
-      : +(num * 1e9).toFixed(2) + 'ns';
+export const formatSecond = (num: number) =>
+  num >= 1
+    ? +num.toFixed(2) + 's'
+    : num >= 1e-3
+      ? +(num * 1e3).toFixed(2) + 'ms'
+      : num >= 1e-6
+        ? +(num * 1e6).toFixed(2) + 'µs'
+        : +(num * 1e9).toFixed(2) + 'ns';
 
 export const stringSize = (str: string) => toByte(Buffer.from(str).byteLength);
 export const gzipSize = (str: string) => toByte(Bun.gzipSync(str).byteLength);
