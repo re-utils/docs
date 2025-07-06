@@ -6,7 +6,7 @@ description: A primitive used to control access to a common resource by multiple
 A primitive used to control access to a common resource by multiple task.
 
 In this example, 5 tasks are spawned but only 2 can run concurrently.
-```ts {9, 14, 21}
+```ts {9, 14, 21} twoslash
 import { semaphore, sleep } from 'ciorent';
 
 const logTime = (...args: any[]) => {
@@ -77,7 +77,7 @@ const runTask = async (...) => {
 ```
 
 Semaphores can also act like an async queue:
-```ts
+```ts twoslash
 import { semaphore, sleep } from 'ciorent';
 
 const logTime = (...args: any[]) => {

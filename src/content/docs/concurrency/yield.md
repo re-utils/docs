@@ -4,9 +4,7 @@ description: Yield back to main thread, allowing other asynchronous tasks to run
 ---
 
 A primitive to yield back to main thread in an expensive sync operation, allowing other tasks to run.
-
-In this example, an expensive sync operation y
-```ts {15}
+```ts {15} twoslash
 import { nextTick, sleep } from 'ciorent';
 
 const logTime = (...args: any[]) => {

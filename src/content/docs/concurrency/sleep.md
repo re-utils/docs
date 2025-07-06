@@ -3,7 +3,7 @@ title: Sleep
 description: Synchronous and asynchronous sleep functions.
 ---
 Synchronous and asynchronous sleep functions.
-```ts
+```ts twoslash
 import { sleep, sleepSync } from 'ciorent';
 
 const logTime = (...args: any[]) => {

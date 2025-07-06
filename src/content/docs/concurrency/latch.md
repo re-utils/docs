@@ -5,7 +5,7 @@ description: A primitive that allows one task to wait until another task complet
 A primitive that allows one task to wait until another task completes an operation before continuing execution.
 
 In this example, `fetch` only runs after `startFetch` is opened.
-```ts {8, 13, 22}
+```ts {8, 13, 22} twoslash
 import { latch, sleep } from 'ciorent';
 
 const logTime = (...args: any[]) => {

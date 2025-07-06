@@ -4,7 +4,7 @@ description: Provide implementations for udic computes.
 ---
 
 In this example, we can choose to log the number to the console or file.
-```ts
+```ts twoslash
 import { appendFileSync } from 'node:fs';
 import * as di from 'udic';
 
@@ -62,7 +62,7 @@ Result: 0
 Compute results are cached within the same dependencies map.
 
 In this example, `generateNumber` computed result get cached:
-```ts
+```ts twoslash
 import { derive } from 'udic';
 
 const generateNumber = derive([], () => Math.random());
@@ -79,7 +79,7 @@ console.log(validateGeneratedNumber({})); // true
 ```
 
 `inject()` creates a child context, so that `inject()` with different dependencies don't use each other cached result.
-```ts
+```ts twoslash
 import * as di from 'udic';
 
 const id = di.service('id')<string>();

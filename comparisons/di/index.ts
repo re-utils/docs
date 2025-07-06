@@ -1,5 +1,5 @@
 import oneDep from './one-dependency/_.js';
-import chainedDeps from './chained-dependencies/_.js';
+import chainedDeps from './dependent-services/_.js';
 
 import { category } from '../utils.js';
 
