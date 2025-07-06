@@ -1,18 +1,17 @@
 import * as di from 'udic';
 
-interface TConfig {
+const config = di.service('config')<{
   logLevel: string;
   connection: string;
-}
-const config = di.service('config')<TConfig>();
+}>();
 
-type TLog = (msg: string) => void;
-const log = di.service('log')<TLog>();
+const log = di.service('log')<
+  (msg: string) => void
+>();
 
-interface TDB {
+const db = di.service('db')<{
   query: (sql: string) => { result: string };
-}
-const db = di.service('db')<TDB>();
+}>();
 
 // Create service implementations that depends on other services
 const logLayer = di.layer(log, di.derive(
@@ -41,5 +40,7 @@ const logImpl = di.provide([logLayer], {
 });
 const dbImpl = di.provide([dbLayer], logImpl);
 
-const main = di.derive([db], (db) => db.query('SELECT * FROM users'));
-console.log(main(dbImpl));
+const main = di.derive([db], (db) => {
+  console.log(db.query('SELECT * FROM users'));
+});
+main(dbImpl);

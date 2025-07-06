@@ -15,7 +15,7 @@ class Logger extends Context.Tag('Logger')<
 
 class Database extends Context.Tag('Database')<
   Database,
-  { readonly query: (sql: string) => Effect.Effect<unknown> }
+  { readonly query: (sql: string) => Effect.Effect<{ result: string }> }
 >() {}
 
 const ConfigLive = Layer.succeed(

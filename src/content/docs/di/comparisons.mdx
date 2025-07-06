@@ -14,7 +14,7 @@ Use and inject one dependency.
     - Bundle size: **`479B`**
     - Minified size: **`260B`**
     - Gzipped size: **`201B`**
-    - Runtime: **`32.57ms`**
+    - Runtime: **`31.09ms`**
     ```ts
     import { service, derive } from 'udic';
     
@@ -31,7 +31,7 @@ Use and inject one dependency.
     - Bundle size: **`78.64KB`**
     - Minified size: **`28.48KB`**
     - Gzipped size: **`8.41KB`**
-    - Runtime: **`36.66ms`**
+    - Runtime: **`35.2ms`**
     ```ts
     import { Micro, Context } from 'effect';
     
@@ -52,26 +52,25 @@ Use and inject one dependency.
 Use and inject 3 dependencies, with `log` depends on `config` and `db` depends on both `log` and `config`.
 <Tabs syncKey='libComparison1'>
   <TabItem label='udic'>
-    - Bundle size: **`1.14KB`**
-    - Minified size: **`751B`**
-    - Gzipped size: **`459B`**
-    - Runtime: **`32.88ms`**
+    - Bundle size: **`1.15KB`**
+    - Minified size: **`753B`**
+    - Gzipped size: **`458B`**
+    - Runtime: **`31.31ms`**
     ```ts
     import * as di from 'udic';
     
-    interface TConfig {
+    const config = di.service('config')<{
       logLevel: string;
       connection: string;
-    }
-    const config = di.service('config')<TConfig>();
+    }>();
     
-    type TLog = (msg: string) => void;
-    const log = di.service('log')<TLog>();
+    const log = di.service('log')<
+      (msg: string) => void
+    >();
     
-    interface TDB {
+    const db = di.service('db')<{
       query: (sql: string) => { result: string };
-    }
-    const db = di.service('db')<TDB>();
+    }>();
     
     // Create service implementations that depends on other services
     const logLayer = di.layer(log, di.derive(
@@ -100,15 +99,17 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
     });
     const dbImpl = di.provide([dbLayer], logImpl);
     
-    const main = di.derive([db], (db) => db.query('SELECT * FROM users'));
-    console.log(main(dbImpl));
+    const main = di.derive([db], (db) => {
+      console.log(db.query('SELECT * FROM users'));
+    });
+    main(dbImpl);
     ```
   </TabItem>
   <TabItem label='effect'>
     - Bundle size: **`1MB`**
     - Minified size: **`312.97KB`**
     - Gzipped size: **`81.36KB`**
-    - Runtime: **`79.53ms`**
+    - Runtime: **`78.41ms`**
     ```ts
     import { Effect, Context, Layer } from 'effect';
     
@@ -127,7 +128,7 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
     
     class Database extends Context.Tag('Database')<
       Database,
-      { readonly query: (sql: string) => Effect.Effect<unknown> }
+      { readonly query: (sql: string) => Effect.Effect<{ result: string }> }
     >() {}
     
     const ConfigLive = Layer.succeed(

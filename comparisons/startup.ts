@@ -17,7 +17,7 @@ export const startupRunner = (requiredItems: number) => {
         await semaphore.acquire(sem);
 
         try {
-          await Bun.$`hyperfine --warmup 20 --shell none --export-json ${OUTPUT} ${COMMANDS}`;
+          await Bun.$`hyperfine -w 20 -N --export-json ${OUTPUT} ${COMMANDS}`;
           const groups = Object.groupBy(
             (await Bun.file(OUTPUT).json()).results as any[],
             ({ command }) => command
