@@ -13,7 +13,7 @@
         "@biomejs/biome": "^2.0.6",
         "@types/bun": "^1.2.18",
         "@types/node": "^24.0.10",
-        "ciorent": "^0.8.0",
+        "ciorent": "^0.9.1",
         "effect": "^3.16.12",
         "oxc-minify": "^0.75.1",
         "rolldown": "^1.0.0-beta.24",
@@ -420,7 +420,7 @@
 
     "ci-info": ["ci-info@4.2.0", "", {}, "sha512-cYY9mypksY8NRqgDB1XD1RiJL338v/551niynFTGkZOO2LHuB2OmOYxDIe/ttN9AHwrqdum1360G3ald0W9kCg=="],
 
-    "ciorent": ["ciorent@0.8.0", "", {}, "sha512-up8yI/V+tEFUVWdNcqfWdyDnnrv6Tr0PV9bfR90LTZwQs1FvvornnhLNRAp5gwtlIsyV1DfcAc0quJ8zXPTsPg=="],
+    "ciorent": ["ciorent@0.9.1", "", {}, "sha512-WVlwSOzIP9kkXGeZaPsNbBiDth5ZYxeMZktWGVcSI7CgL+0gf6mspxY5M7qjuvxFbISyPF/FlYep1xmmOeIBzg=="],
 
     "cli-boxes": ["cli-boxes@3.0.0", "", {}, "sha512-/lzGpEWL/8PfI0BmBOPRwp0c/wFNX1RdUML3jK/RcSBA9T8mZDdQpqYBKtCFTOfQbwPqWEOpjqW+Fnayc0969g=="],
 

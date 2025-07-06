@@ -7,6 +7,4 @@ const program = Micro.gen(function* () {
   console.log('Random number:', yield* random);
 });
 
-Micro.runSync(
-  Micro.provideService(program, Random, Micro.sync(Math.random)),
-);
+Micro.runSync(Micro.provideService(program, Random, Micro.sync(Math.random)));

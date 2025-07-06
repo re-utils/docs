@@ -9,11 +9,12 @@ Compare **udic** with other DI libraries.
 
 ## Basic injection
 Use and inject one dependency.
-<Tabs syncKey="libComparison0">
-  <TabItem label="udic">
+<Tabs syncKey='libComparison0'>
+  <TabItem label='udic'>
     - Bundled: **`479B`**
     - Minified: **`260B`**
     - Gzipped: **`201B`**
+    - Startup: **`35.97ms`**
     ```ts
     import { service, derive } from 'udic';
     
@@ -26,10 +27,11 @@ Use and inject one dependency.
     main({ random: Math.random });
     ```
   </TabItem>
-  <TabItem label="effect">
+  <TabItem label='effect'>
     - Bundled: **`78.64KB`**
     - Minified: **`28.48KB`**
     - Gzipped: **`8.41KB`**
+    - Startup: **`41.03ms`**
     ```ts
     import { Micro, Context } from 'effect';
     
@@ -40,9 +42,7 @@ Use and inject one dependency.
       console.log('Random number:', yield* random);
     });
     
-    Micro.runSync(
-      Micro.provideService(program, Random, Micro.sync(Math.random)),
-    );
+    Micro.runSync(Micro.provideService(program, Random, Micro.sync(Math.random)));
     ```
   </TabItem>
 </Tabs>
@@ -50,11 +50,12 @@ Use and inject one dependency.
 
 ## Chained dependencies
 Use and inject 3 dependencies, with `log` depends on `config` and `db` depends on both `log` and `config`.
-<Tabs syncKey="libComparison1">
-  <TabItem label="udic">
+<Tabs syncKey='libComparison1'>
+  <TabItem label='udic'>
     - Bundled: **`1.04KB`**
     - Minified: **`678B`**
     - Gzipped: **`428B`**
+    - Startup: **`34.77ms`**
     ```ts
     import { service, derive, layer } from 'udic';
     
@@ -109,10 +110,11 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
     console.log(main(dbLayer));
     ```
   </TabItem>
-  <TabItem label="effect">
+  <TabItem label='effect'>
     - Bundled: **`1MB`**
     - Minified: **`312.97KB`**
     - Gzipped: **`81.36KB`**
+    - Startup: **`97.9ms`**
     ```ts
     import { Effect, Context, Layer } from 'effect';
     
