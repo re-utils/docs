@@ -12,9 +12,8 @@ import {
   type TCategory,
   type TTest,
 } from './utils.js';
-import { startupRunner, type StartupRunner } from './startup.js';
 
-const report = async (path: string, startupRunner: StartupRunner) => {
+const report = async (path: string) => {
   const outputFile = path.slice(0, -EXT.length);
   const outputBundle = outputFile + '.bundled.js';
 
@@ -38,19 +37,17 @@ const report = async (path: string, startupRunner: StartupRunner) => {
   return {
     'Bundle size': stringSize(code),
     'Minified size': stringSize(minifiedCode),
-    'Gzipped size': gzipSize(minifiedCode),
-    Runtime: await startupRunner.addCommand('node ' + outputBundle),
+    'Gzipped size': gzipSize(minifiedCode)
   };
 };
 
 let currentID = 0;
 const processTest = async (c: TTest) => {
   const entries = Object.entries(c.code);
-  const runner = startupRunner(entries.length);
 
   // Process each items
   const processed = entries.map(async ([key, path]) => {
-    const stats = await report(path, runner);
+    const stats = await report(path);
 
     const tabItem =
       Object.entries(stats)
