@@ -17,14 +17,16 @@ const report = async (path: string, startupRunner: StartupRunner) => {
       file: outputBundle,
     },
   });
+
   const code = out.output[0].code;
   const minifiedCode = minify(path, code).code!;
+  await Bun.write(outputBundle, minifiedCode);
 
   return {
     'Bundle size': stringSize(code),
     'Minified size': stringSize(minifiedCode),
     'Gzipped size': gzipSize(minifiedCode),
-    'Startup time': await startupRunner.addCommand('node ' + outputBundle),
+    'Runtime': await startupRunner.addCommand('node ' + outputBundle),
   };
 };
 

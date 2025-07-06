@@ -14,7 +14,7 @@ Use and inject one dependency.
     - Bundle size: **`479B`**
     - Minified size: **`260B`**
     - Gzipped size: **`201B`**
-    - Startup time: **`36.4ms`**
+    - Runtime: **`116.19ms`**
     ```ts
     import { service, derive } from 'udic';
     
@@ -31,7 +31,7 @@ Use and inject one dependency.
     - Bundle size: **`78.64KB`**
     - Minified size: **`28.48KB`**
     - Gzipped size: **`8.41KB`**
-    - Startup time: **`40.5ms`**
+    - Runtime: **`129.78ms`**
     ```ts
     import { Micro, Context } from 'effect';
     
@@ -55,7 +55,7 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
     - Bundle size: **`1.04KB`**
     - Minified size: **`678B`**
     - Gzipped size: **`428B`**
-    - Startup time: **`35.26ms`**
+    - Runtime: **`117.81ms`**
     ```ts
     import { service, derive, layer } from 'udic';
     
@@ -114,7 +114,7 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
     - Bundle size: **`1MB`**
     - Minified size: **`312.97KB`**
     - Gzipped size: **`81.36KB`**
-    - Startup time: **`99.92ms`**
+    - Runtime: **`308.21ms`**
     ```ts
     import { Effect, Context, Layer } from 'effect';
     
