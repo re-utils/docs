@@ -11,10 +11,10 @@ Compare **udic** with other DI libraries.
 Use and inject one dependency.
 <Tabs syncKey='libComparison0'>
   <TabItem label='udic'>
-    - Bundled: **`479B`**
-    - Minified: **`260B`**
-    - Gzipped: **`201B`**
-    - Startup: **`35.97ms`**
+    - Bundle size: **`479B`**
+    - Minified size: **`260B`**
+    - Gzipped size: **`201B`**
+    - Startup time: **`36.4ms`**
     ```ts
     import { service, derive } from 'udic';
     
@@ -28,10 +28,10 @@ Use and inject one dependency.
     ```
   </TabItem>
   <TabItem label='effect'>
-    - Bundled: **`78.64KB`**
-    - Minified: **`28.48KB`**
-    - Gzipped: **`8.41KB`**
-    - Startup: **`41.03ms`**
+    - Bundle size: **`78.64KB`**
+    - Minified size: **`28.48KB`**
+    - Gzipped size: **`8.41KB`**
+    - Startup time: **`40.5ms`**
     ```ts
     import { Micro, Context } from 'effect';
     
@@ -52,10 +52,10 @@ Use and inject one dependency.
 Use and inject 3 dependencies, with `log` depends on `config` and `db` depends on both `log` and `config`.
 <Tabs syncKey='libComparison1'>
   <TabItem label='udic'>
-    - Bundled: **`1.04KB`**
-    - Minified: **`678B`**
-    - Gzipped: **`428B`**
-    - Startup: **`34.77ms`**
+    - Bundle size: **`1.04KB`**
+    - Minified size: **`678B`**
+    - Gzipped size: **`428B`**
+    - Startup time: **`35.26ms`**
     ```ts
     import { service, derive, layer } from 'udic';
     
@@ -111,10 +111,10 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
     ```
   </TabItem>
   <TabItem label='effect'>
-    - Bundled: **`1MB`**
-    - Minified: **`312.97KB`**
-    - Gzipped: **`81.36KB`**
-    - Startup: **`97.9ms`**
+    - Bundle size: **`1MB`**
+    - Minified size: **`312.97KB`**
+    - Gzipped size: **`81.36KB`**
+    - Startup time: **`99.92ms`**
     ```ts
     import { Effect, Context, Layer } from 'effect';
     

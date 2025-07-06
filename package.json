@@ -3,6 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
+    "build:compare": "bun comparisons/index.ts",
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
