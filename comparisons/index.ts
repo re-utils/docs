@@ -20,6 +20,7 @@ const report = async (path: string, startupRunner: StartupRunner) => {
 
   const out = await build({
     input: path,
+    external: /^node:.*$/,
     output: {
       format: 'es',
       file: outputBundle,
@@ -53,7 +54,7 @@ const processTest = async (c: TTest) => {
 
     const tabItem =
       Object.entries(stats)
-        .map(([key, value]) => `- ${key}: **\`${value}\`**\n`)
+        .map(([key, value]) => `- ${key}: **${value}**\n`)
         .join('') +
       '```ts\n' +
       (await readFile(path, 'utf8')).trim() +
@@ -90,4 +91,7 @@ ${c.description}
 };
 
 import di from './di/index.js';
-await Promise.all([di].map(processCategory));
+import concurrency from './concurrency/index.js';
+await Promise.all([
+  di, concurrency
+].map(processCategory));

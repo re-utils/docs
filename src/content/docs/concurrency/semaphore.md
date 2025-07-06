@@ -75,25 +75,3 @@ const runTask = async (...) => {
   }
 }
 ```
-
-Semaphores can also act like an async queue:
-```ts
-import { semaphore, sleep } from 'ciorent';
-
-const logTime = (...args: any[]) => {
-  console.log('[' + performance.now().toFixed(1) + 'ms]', ...args);
-};
-
-// Creates a semaphore with 2 permits
-const sem = semaphore.init(2);
-
-// Try to run 5 tasks concurrently
-for (let i = 1; i <= 5; i++)
-  semaphore.queue(sem, async () => {
-    logTime(i, 'started');
-    await sleep(1000);
-    logTime(i, 'done');
-  });
-```
-
-`semaphore.queue` is usually faster as it avoids allocating a `Promise` to wait until a permit is available.

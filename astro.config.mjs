@@ -1,6 +1,6 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
-import starlight from '@astrojs/starlight';
+import { defineConfig } from "astro/config";
+import starlight from "@astrojs/starlight";
 
 /**
  * @param {string} prefix
@@ -10,64 +10,65 @@ const createItem = (prefix, items, label = prefix) => ({
   label,
   items: items.map((item) => ({
     label: item,
-    slug: prefix.toLowerCase() + '/' + item.toLowerCase().replaceAll(' ', '-'),
+    slug: prefix.toLowerCase() + "/" + item.toLowerCase().replaceAll(" ", "-"),
   })),
 });
 
 // https://astro.build/config
 export default defineConfig({
   redirects: Object.fromEntries(
-    ['/concurrency', '/di'].map((link) => [link, link + '/references']),
+    ["/concurrency", "/di"].map((link) => [link, link + "/references"]),
   ),
   prefetch: {
     prefetchAll: true,
-    defaultStrategy: 'viewport',
+    defaultStrategy: "viewport",
   },
 
   integrations: [
     starlight({
-      title: 'r-u',
+      title: "r-u",
       editLink: {
-        baseUrl: 'https://github.com/re-utils/docs/edit/main',
+        baseUrl: "https://github.com/re-utils/docs/edit/main",
       },
       social: [
         {
-          icon: 'github',
-          label: 'GitHub',
-          href: '//github.com/re-utils',
+          icon: "github",
+          label: "GitHub",
+          href: "//github.com/re-utils",
         },
         {
-          icon: 'discord',
-          label: 'Discord',
-          href: '//discord.gg/za6S2GbK24',
+          icon: "discord",
+          label: "Discord",
+          href: "//discord.gg/za6S2GbK24",
         },
       ],
       sidebar: [
-        createItem('Guides', ['Intro', 'Libraries']),
-        createItem('Concurrency', [
-          'References',
-          'Sleep',
-          'Yield',
-          'Semaphore',
-          'Latch',
+        createItem("Guides", ["Intro", "Libraries"]),
+        createItem("Concurrency", [
+          "References",
+          "Sleep",
+          "Yield",
+          "Semaphore",
+          "Latch",
+          "Comparisons",
         ]),
         createItem(
-          'di',
+          "di",
           [
-            'References',
-            'Using services',
-            'Provide implementations',
-            'Comparisons',
+            "References",
+            "Using services",
+            "Provide implementations",
+            "Comparisons",
           ],
-          'Dependency Injection',
+          "Dependency Injection",
         ),
       ],
       expressiveCode: {
-        themes: ['catppuccin-mocha'],
+        themes: ["catppuccin-mocha"],
       },
       customCss: [
-        '@fontsource-variable/roboto-mono',
-        './src/styles/globals.css',
+        "@fontsource-variable/roboto-mono",
+        "./src/styles/globals.css",
       ],
     }),
   ],

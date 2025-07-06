@@ -1,0 +1,62 @@
+---
+title: Comparisons
+description: Compare **ciorent** with other concurrency libraries.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Compare **ciorent** with other concurrency libraries.
+
+## Concurrency control
+Control the amount of tasks running concurrently.
+<Tabs syncKey='libComparison2'>
+  <TabItem label='ciorent'>
+    - Bundle size: **998B**
+    - Minified size: **518B**
+    - Gzipped size: **346B**
+    - Runtime: **293.82ms**
+    ```ts
+    import { semaphore } from 'ciorent';
+    import { setTimeout } from 'node:timers/promises';
+    
+    const sem = semaphore.init(2);
+    const asyncTask = async () => {
+      await semaphore.acquire(sem);
+      await setTimeout(5);
+      semaphore.release(sem);
+    };
+    
+    for (let i = 0; i < 100; i++) asyncTask();
+    ```
+  </TabItem>
+  <TabItem label='p-limit'>
+    - Bundle size: **3.03KB**
+    - Minified size: **1.41KB**
+    - Gzipped size: **724B**
+    - Runtime: **295.39ms**
+    ```ts
+    import { limitFunction } from 'p-limit';
+    import { setTimeout } from 'node:timers/promises';
+    
+    const asyncTask = limitFunction(async () => {
+      await setTimeout(5);
+    }, { concurrency: 2 });
+    
+    for (let i = 0; i < 100; i++) asyncTask();
+    ```
+  </TabItem>
+  <TabItem label='effect'>
+    - Bundle size: **942.09KB**
+    - Minified size: **203.88KB**
+    - Gzipped size: **65.25KB**
+    - Runtime: **342.91ms**
+    ```ts
+    import { Effect } from 'effect';
+    
+    const tasks = new Array<Effect.Effect<void>>(100).fill(Effect.sleep(5));
+    Effect.runPromise(
+      Effect.all(tasks, { concurrency: 2 })
+    );
+    ```
+  </TabItem>
+</Tabs>

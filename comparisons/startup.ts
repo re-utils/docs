@@ -23,15 +23,15 @@ export const startupRunner = (requiredItems: number) => {
             ({ command }) => command,
           );
 
-          // @ts-ignore
-          for (const key in groups)
+          for (const key in groups) {
+            // @ts-ignore
             results[key] = formatSecond(groups[key][0].mean);
+          }
         } catch (e) {
           console.error('Running benchmark failed:', e);
         }
 
         latch.open(COMMAND_LATCH);
-
         semaphore.release(sem);
       }
 
