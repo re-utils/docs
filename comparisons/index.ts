@@ -41,7 +41,6 @@ const report = async (path: string) => {
   };
 };
 
-let currentID = 0;
 const processTest = async (c: TTest) => {
   const entries = Object.entries(c.code);
 
@@ -62,7 +61,7 @@ const processTest = async (c: TTest) => {
 
   return `## ${c.title}
 ${c.description}
-<Tabs syncKey='libComparison${currentID++}'>
+<Tabs>
 ${(await Promise.all(processed)).join('\n')}
 </Tabs>
 `;
