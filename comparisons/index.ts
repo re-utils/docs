@@ -14,12 +14,17 @@ const report = async (path: string, startupRunner: StartupRunner) => {
   const out = await build({
     input: path,
     output: {
+      format: 'es',
       file: outputBundle,
     },
   });
 
   const code = out.output[0].code;
-  const minifiedCode = minify(path, code).code!;
+  const minifiedCode = minify(path, code, {
+    mangle: {
+      toplevel: true
+    }
+  }).code!;
   await Bun.write(outputBundle, minifiedCode);
 
   return {
