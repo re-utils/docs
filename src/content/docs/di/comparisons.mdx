@@ -14,16 +14,16 @@ Use and inject one dependency.
     - Bundle size: **`479B`**
     - Minified size: **`215B`**
     - Gzipped size: **`177B`**
-    - Runtime: **`31.03ms`**
+    - Runtime: **`32.48ms`**
     ```ts
     import { service, derive } from 'udic';
-
+    
     const random = service('random')<() => number>();
-
+    
     const main = derive([random], (random) => {
       console.log('Random number:', random());
     });
-
+    
     main({ random: Math.random });
     ```
   </TabItem>
@@ -31,17 +31,17 @@ Use and inject one dependency.
     - Bundle size: **`78.64KB`**
     - Minified size: **`21.49KB`**
     - Gzipped size: **`7.41KB`**
-    - Runtime: **`35.1ms`**
+    - Runtime: **`36.6ms`**
     ```ts
     import { Micro, Context } from 'effect';
-
+    
     class Random extends Context.Tag('Random')<Random, Micro.Micro<number>>() {}
-
+    
     const program = Micro.gen(function* () {
       const random = yield* Micro.service(Random);
       console.log('Random number:', yield* random);
     });
-
+    
     Micro.runSync(Micro.provideService(program, Random, Micro.sync(Math.random)));
     ```
   </TabItem>
@@ -52,35 +52,32 @@ Use and inject one dependency.
 Use and inject 3 dependencies, with `log` depends on `config` and `db` depends on both `log` and `config`.
 <Tabs syncKey='libComparison1'>
   <TabItem label='udic'>
-    - Bundle size: **`1.15KB`**
-    - Minified size: **`594B`**
-    - Gzipped size: **`410B`**
-    - Runtime: **`31.29ms`**
+    - Bundle size: **`1.14KB`**
+    - Minified size: **`601B`**
+    - Gzipped size: **`414B`**
+    - Runtime: **`32.86ms`**
     ```ts
     import * as di from 'udic';
-
+    
     const config = di.service('config')<{
       logLevel: string;
       connection: string;
     }>();
-
     const log = di.service('log')<
       (msg: string) => void
     >();
-
     const db = di.service('db')<{
       query: (sql: string) => { result: string };
     }>();
-
+    
     // Create service implementations that depends on other services
-    const logLayer = di.layer(log, di.derive(
+    const logImpl = di.impl(log, di.derive(
       [config],
       ({ logLevel }) => (msg) => {
         console.log(`[${logLevel}] ${msg}`);
       },
     ));
-
-    const dbLayer = di.layer(db, di.derive(
+    const dbImpl = di.impl(db, di.derive(
       [config, log],
       ({ connection }, log) => ({
         query: (sql: string) => {
@@ -89,30 +86,28 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
         },
       }),
     ));
-
-    // Provide implementations for the layer
-    const logImpl = di.provide([logLayer], {
+    
+    // Provide dependencies for the impl
+    const logCtx = di.merge([logImpl], {
       config: {
         logLevel: 'INFO',
         connection: 'mysql://username:password@hostname:port/database_name',
       },
     });
-    const dbImpl = di.provide([dbLayer], logImpl);
-
-    const main = di.derive([db], (db) => {
-      console.log(db.query('SELECT * FROM users'));
-    });
-    main(dbImpl);
+    const dbCtx = di.merge([dbImpl], logCtx);
+    
+    const main = di.derive([db], (db) => db.query('SELECT * FROM users'));
+    console.log(main(dbCtx));
     ```
   </TabItem>
   <TabItem label='effect'>
     - Bundle size: **`1MB`**
     - Minified size: **`210.81KB`**
     - Gzipped size: **`67.79KB`**
-    - Runtime: **`77.13ms`**
+    - Runtime: **`78.3ms`**
     ```ts
     import { Effect, Context, Layer } from 'effect';
-
+    
     class Config extends Context.Tag('Config')<
       Config,
       Effect.Effect<{
@@ -120,17 +115,17 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
         connection: string;
       }>
     >() {}
-
+    
     class Logger extends Context.Tag('Logger')<
       Logger,
       (message: string) => Effect.Effect<void>
     >() {}
-
+    
     class Database extends Context.Tag('Database')<
       Database,
       { readonly query: (sql: string) => Effect.Effect<{ result: string }> }
     >() {}
-
+    
     const ConfigLive = Layer.succeed(
       Config,
       Effect.succeed({
@@ -138,12 +133,12 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
         connection: 'mysql://username:password@hostname:port/database_name',
       }),
     );
-
+    
     const LoggerLive = Layer.effect(
       Logger,
       Effect.gen(function* () {
         const config = yield* Config;
-
+    
         return (message) =>
           Effect.gen(function* () {
             const { logLevel } = yield* config;
@@ -151,15 +146,15 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
           });
       }),
     );
-
+    
     const DatabaseLive = Layer.effect(
       Database,
       Effect.gen(function* () {
         const config = yield* Config;
         const { connection } = yield* config;
-
+    
         const log = yield* Logger;
-
+    
         return {
           query: (sql: string) =>
             Effect.gen(function* () {
@@ -169,19 +164,19 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
         };
       }),
     );
-
+    
     const AppConfigLive = Layer.merge(ConfigLive, LoggerLive);
-
+    
     const MainLive = DatabaseLive.pipe(
       Layer.provide(AppConfigLive),
       Layer.provide(ConfigLive),
     );
-
+    
     const program = Effect.gen(function* () {
       const database = yield* Database;
       console.log(yield* database.query('SELECT * FROM users'));
     });
-
+    
     Effect.runSync(Effect.provide(program, MainLive));
     ```
   </TabItem>

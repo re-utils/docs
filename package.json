@@ -16,17 +16,16 @@
     "@expressive-code/plugin-line-numbers": "^0.41.3",
     "@fontsource-variable/roboto-mono": "^5.2.6",
     "astro": "^5.6.1",
-    "expressive-code-twoslash": "^0.5.3",
-    "sharp": "^0.34.2",
-    "udic": "0.3.1",
-    "ciorent": "^0.9.1",
-    "effect": "^3.16.12"
+    "sharp": "^0.34.2"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.0.6",
     "@types/bun": "^1.2.18",
     "@types/node": "^24.0.10",
     "oxc-minify": "^0.75.1",
-    "rolldown": "^1.0.0-beta.24"
+    "rolldown": "^1.0.0-beta.24",
+    "udic": "0.4.0",
+    "ciorent": "^0.9.1",
+    "effect": "^3.16.12"
   }
 }
