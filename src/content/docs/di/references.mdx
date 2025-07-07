@@ -54,11 +54,14 @@ Import:
 import * as di from 'udic';
 
 // Named imports
-import { service, derive, inject } from 'udic';
+import {
+  service, use, inject,
+  impl, link
+} from 'udic';
 
 // Type imports
 import type {
-  Service, Compute, Dependency
+  Service, Compute, Impl
   InferResult, InferDependency
 } from 'udic';
 ```
