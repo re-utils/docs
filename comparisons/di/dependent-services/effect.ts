@@ -18,6 +18,11 @@ class Database extends Context.Tag('Database')<
   { readonly query: (sql: string) => Effect.Effect<{ result: string }> }
 >() {}
 
+const program = Effect.gen(function* () {
+  const database = yield* Database;
+  console.log(yield* database.query('SELECT * FROM users'));
+});
+
 const ConfigLive = Layer.succeed(
   Config,
   Effect.succeed({
@@ -43,13 +48,12 @@ const DatabaseLive = Layer.effect(
   Database,
   Effect.gen(function* () {
     const config = yield* Config;
-    const { connection } = yield* config;
-
     const log = yield* Logger;
 
     return {
       query: (sql: string) =>
         Effect.gen(function* () {
+          const { connection } = yield* config;
           yield* log('Executing query: ' + sql);
           return { result: 'Results from ' + connection };
         }),
@@ -57,16 +61,9 @@ const DatabaseLive = Layer.effect(
   }),
 );
 
-const AppConfigLive = Layer.merge(ConfigLive, LoggerLive);
-
 const MainLive = DatabaseLive.pipe(
-  Layer.provide(AppConfigLive),
+  Layer.provide(LoggerLive),
   Layer.provide(ConfigLive),
 );
-
-const program = Effect.gen(function* () {
-  const database = yield* Database;
-  console.log(yield* database.query('SELECT * FROM users'));
-});
 
 Effect.runSync(Effect.provide(program, MainLive));

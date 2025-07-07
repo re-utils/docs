@@ -102,8 +102,8 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
   </TabItem>
   <TabItem label='effect'>
     - Bundle size: **1MB**
-    - Minified size: **210.81KB**
-    - Gzipped size: **67.79KB**
+    - Minified size: **210.79KB**
+    - Gzipped size: **67.78KB**
     ```ts
     import { Effect, Context, Layer } from 'effect';
     
@@ -124,6 +124,11 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
       Database,
       { readonly query: (sql: string) => Effect.Effect<{ result: string }> }
     >() {}
+    
+    const program = Effect.gen(function* () {
+      const database = yield* Database;
+      console.log(yield* database.query('SELECT * FROM users'));
+    });
     
     const ConfigLive = Layer.succeed(
       Config,
@@ -150,13 +155,12 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
       Database,
       Effect.gen(function* () {
         const config = yield* Config;
-        const { connection } = yield* config;
-    
         const log = yield* Logger;
     
         return {
           query: (sql: string) =>
             Effect.gen(function* () {
+              const { connection } = yield* config;
               yield* log('Executing query: ' + sql);
               return { result: 'Results from ' + connection };
             }),
@@ -164,17 +168,10 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
       }),
     );
     
-    const AppConfigLive = Layer.merge(ConfigLive, LoggerLive);
-    
     const MainLive = DatabaseLive.pipe(
-      Layer.provide(AppConfigLive),
+      Layer.provide(LoggerLive),
       Layer.provide(ConfigLive),
     );
-    
-    const program = Effect.gen(function* () {
-      const database = yield* Database;
-      console.log(yield* database.query('SELECT * FROM users'));
-    });
     
     Effect.runSync(Effect.provide(program, MainLive));
     ```
