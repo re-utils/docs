@@ -23,10 +23,10 @@ const logImpl = di.impl(log, di.use(
 );
 const dbImpl = di.impl(db, di.use(
   [config, log],
-  ({ connection }, log) => ({
+  (config, log) => ({
     query: (sql: string) => {
       log('Executing query: ' + sql);
-      return { result: 'Results from ' + connection };
+      return { result: 'Results from ' + config.connection };
     },
   })
 ));

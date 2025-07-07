@@ -51,7 +51,7 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
 <Tabs>
   <TabItem label='udic'>
     - Bundle size: **1.14KB**
-    - Minified size: **599B**
+    - Minified size: **597B**
     - Gzipped size: **410B**
     ```ts
     import * as di from 'udic';
@@ -79,10 +79,10 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
     );
     const dbImpl = di.impl(db, di.use(
       [config, log],
-      ({ connection }, log) => ({
+      (config, log) => ({
         query: (sql: string) => {
           log('Executing query: ' + sql);
-          return { result: 'Results from ' + connection };
+          return { result: 'Results from ' + config.connection };
         },
       })
     ));
