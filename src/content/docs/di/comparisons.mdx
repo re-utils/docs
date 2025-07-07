@@ -50,8 +50,8 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
 <Tabs>
   <TabItem label='udic'>
     - Bundle size: **1.15KB**
-    - Minified size: **600B**
-    - Gzipped size: **412B**
+    - Minified size: **606B**
+    - Gzipped size: **414B**
     ```ts
     import * as di from 'udic';
     
@@ -79,7 +79,7 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
     const dbImpl = di.impl(
       db,
       di.use([config, log], (config, log) => ({
-        query: (sql: string) => {
+        query(sql) {
           log('Executing query: ' + sql);
           return { result: 'Results from ' + config.connection };
         },
@@ -156,7 +156,7 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
         const log = yield* Logger;
     
         return {
-          query: (sql: string) =>
+          query: (sql) =>
             Effect.gen(function* () {
               yield* log('Executing query: ' + sql);
               return { result: 'Results from ' + config.connection };

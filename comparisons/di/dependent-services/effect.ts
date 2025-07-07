@@ -50,7 +50,7 @@ const DatabaseLive = Layer.effect(
     const log = yield* Logger;
 
     return {
-      query: (sql: string) =>
+      query: (sql) =>
         Effect.gen(function* () {
           yield* log('Executing query: ' + sql);
           return { result: 'Results from ' + config.connection };
