@@ -15,7 +15,7 @@ class Logger extends Context.Tag('Logger')<
 
 class Database extends Context.Tag('Database')<
   Database,
-  { readonly query: (sql: string) => Effect.Effect<{ result: string }> }
+  { query: (sql: string) => Effect.Effect<{ result: string }> }
 >() {}
 
 const program = Effect.gen(function* () {
@@ -26,13 +26,10 @@ const program = Effect.gen(function* () {
   yield* log(data.result);
 });
 
-const ConfigLive = Layer.succeed(
-  Config,
-  {
-    logLevel: 'INFO',
-    connection: 'mysql://username:password@hostname:port/database_name',
-  },
-);
+const ConfigLive = Layer.succeed(Config, {
+  logLevel: 'INFO',
+  connection: 'mysql://username:password@hostname:port/database_name',
+});
 
 const LoggerLive = Layer.effect(
   Logger,
@@ -66,6 +63,6 @@ Effect.runSync(
   program.pipe(
     Effect.provide(DatabaseLive),
     Effect.provide(LoggerLive),
-    Effect.provide(ConfigLive)
-  )
+    Effect.provide(ConfigLive),
+  ),
 );

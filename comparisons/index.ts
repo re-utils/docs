@@ -37,7 +37,7 @@ const report = async (path: string) => {
   return {
     'Bundle size': stringSize(code),
     'Minified size': stringSize(minifiedCode),
-    'Gzipped size': gzipSize(minifiedCode)
+    'Gzipped size': gzipSize(minifiedCode),
   };
 };
 
@@ -88,6 +88,4 @@ ${c.description}
 
 import di from './di/index.js';
 import concurrency from './concurrency/index.js';
-await Promise.all([
-  di, concurrency
-].map(processCategory));
+await Promise.all([di, concurrency].map(processCategory));

@@ -18,7 +18,6 @@ Use and inject one dependency.
     import * as di from 'udic';
     
     const random = di.service('random')<() => number>();
-    
     const main = di.use([random], (random) => {
       console.log('Random number:', random());
     });
@@ -71,21 +70,21 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
     });
     
     // Implementations
-    const logImpl = di.impl(log, di.use(
-      [config],
-      (config) => (msg) => {
+    const logImpl = di.impl(
+      log,
+      di.use([config], (config) => (msg) => {
         console.log(`[${config.logLevel}] ${msg}`);
-      })
+      }),
     );
-    const dbImpl = di.impl(db, di.use(
-      [config, log],
-      (config, log) => ({
+    const dbImpl = di.impl(
+      db,
+      di.use([config, log], (config, log) => ({
         query: (sql: string) => {
           log('Executing query: ' + sql);
           return { result: 'Results from ' + config.connection };
         },
-      })
-    ));
+      })),
+    );
     
     // Link dependencies
     const logDeps = di.link([logImpl], {
@@ -122,7 +121,7 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
     
     class Database extends Context.Tag('Database')<
       Database,
-      { readonly query: (sql: string) => Effect.Effect<{ result: string }> }
+      { query: (sql: string) => Effect.Effect<{ result: string }> }
     >() {}
     
     const program = Effect.gen(function* () {
@@ -133,13 +132,10 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
       yield* log(data.result);
     });
     
-    const ConfigLive = Layer.succeed(
-      Config,
-      {
-        logLevel: 'INFO',
-        connection: 'mysql://username:password@hostname:port/database_name',
-      },
-    );
+    const ConfigLive = Layer.succeed(Config, {
+      logLevel: 'INFO',
+      connection: 'mysql://username:password@hostname:port/database_name',
+    });
     
     const LoggerLive = Layer.effect(
       Logger,
@@ -173,8 +169,8 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
       program.pipe(
         Effect.provide(DatabaseLive),
         Effect.provide(LoggerLive),
-        Effect.provide(ConfigLive)
-      )
+        Effect.provide(ConfigLive),
+      ),
     );
     ```
   </TabItem>

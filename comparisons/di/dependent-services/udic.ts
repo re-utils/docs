@@ -10,29 +10,26 @@ const db = di.service('db')<{
   query: (sql: string) => { result: string };
 }>();
 
-const main = di.use(
-  [db, log],
-  (db, log) => {
-    log(db.query('SELECT * FROM users').result);
-  }
-);
+const main = di.use([db, log], (db, log) => {
+  log(db.query('SELECT * FROM users').result);
+});
 
 // Implementations
-const logImpl = di.impl(log, di.use(
-  [config],
-  (config) => (msg) => {
+const logImpl = di.impl(
+  log,
+  di.use([config], (config) => (msg) => {
     console.log(`[${config.logLevel}] ${msg}`);
-  })
+  }),
 );
-const dbImpl = di.impl(db, di.use(
-  [config, log],
-  (config, log) => ({
+const dbImpl = di.impl(
+  db,
+  di.use([config, log], (config, log) => ({
     query: (sql: string) => {
       log('Executing query: ' + sql);
       return { result: 'Results from ' + config.connection };
     },
-  })
-));
+  })),
+);
 
 // Link dependencies
 const logDeps = di.link([logImpl], {
