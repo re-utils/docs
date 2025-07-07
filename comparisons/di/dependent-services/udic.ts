@@ -10,9 +10,12 @@ const db = di.service('db')<{
   query: (sql: string) => { result: string };
 }>();
 
-const main = di.use([db], (db) => {
-  console.log(db.query('SELECT * FROM users'));
-});
+const main = di.use(
+  [db, log],
+  (db, log) => {
+    log(db.query('SELECT * FROM users').result);
+  }
+);
 
 // Implementations
 const logImpl = di.impl(log, di.use(

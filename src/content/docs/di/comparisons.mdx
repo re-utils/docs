@@ -50,9 +50,9 @@ Use and inject one dependency.
 Use and inject 3 dependencies, with `log` depends on `config` and `db` depends on both `log` and `config`.
 <Tabs>
   <TabItem label='udic'>
-    - Bundle size: **1.14KB**
-    - Minified size: **597B**
-    - Gzipped size: **410B**
+    - Bundle size: **1.15KB**
+    - Minified size: **600B**
+    - Gzipped size: **412B**
     ```ts
     import * as di from 'udic';
     
@@ -66,8 +66,8 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
       query: (sql: string) => { result: string };
     }>();
     
-    const main = di.use([db], (db) => {
-      console.log(db.query('SELECT * FROM users'));
+    const main = di.use([db, log], (db, log) => {
+      log(db.query('SELECT * FROM users').result);
     });
     
     // Implementations
@@ -102,17 +102,17 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
   </TabItem>
   <TabItem label='effect'>
     - Bundle size: **1MB**
-    - Minified size: **210.79KB**
+    - Minified size: **210.77KB**
     - Gzipped size: **67.78KB**
     ```ts
-    import { Effect, Context, Layer } from 'effect';
+    import { Effect, Context, Layer, pipe } from 'effect';
     
     class Config extends Context.Tag('Config')<
       Config,
-      Effect.Effect<{
+      {
         logLevel: string;
         connection: string;
-      }>
+      }
     >() {}
     
     class Logger extends Context.Tag('Logger')<
@@ -127,15 +127,18 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
     
     const program = Effect.gen(function* () {
       const database = yield* Database;
-      console.log(yield* database.query('SELECT * FROM users'));
+      const log = yield* Logger;
+    
+      const data = yield* database.query('SELECT * FROM users');
+      yield* log(data.result);
     });
     
     const ConfigLive = Layer.succeed(
       Config,
-      Effect.succeed({
+      {
         logLevel: 'INFO',
         connection: 'mysql://username:password@hostname:port/database_name',
-      }),
+      },
     );
     
     const LoggerLive = Layer.effect(
@@ -145,8 +148,7 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
     
         return (message) =>
           Effect.gen(function* () {
-            const { logLevel } = yield* config;
-            console.log(`[${logLevel}] ${message}`);
+            console.log(`[${config.logLevel}] ${message}`);
           });
       }),
     );
@@ -160,20 +162,20 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
         return {
           query: (sql: string) =>
             Effect.gen(function* () {
-              const { connection } = yield* config;
               yield* log('Executing query: ' + sql);
-              return { result: 'Results from ' + connection };
+              return { result: 'Results from ' + config.connection };
             }),
         };
       }),
     );
     
-    const MainLive = DatabaseLive.pipe(
-      Layer.provide(LoggerLive),
-      Layer.provide(ConfigLive),
+    Effect.runSync(
+      program.pipe(
+        Effect.provide(DatabaseLive),
+        Effect.provide(LoggerLive),
+        Effect.provide(ConfigLive)
+      )
     );
-    
-    Effect.runSync(Effect.provide(program, MainLive));
     ```
   </TabItem>
 </Tabs>

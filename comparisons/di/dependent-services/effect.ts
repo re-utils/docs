@@ -1,11 +1,11 @@
-import { Effect, Context, Layer } from 'effect';
+import { Effect, Context, Layer, pipe } from 'effect';
 
 class Config extends Context.Tag('Config')<
   Config,
-  Effect.Effect<{
+  {
     logLevel: string;
     connection: string;
-  }>
+  }
 >() {}
 
 class Logger extends Context.Tag('Logger')<
@@ -20,15 +20,18 @@ class Database extends Context.Tag('Database')<
 
 const program = Effect.gen(function* () {
   const database = yield* Database;
-  console.log(yield* database.query('SELECT * FROM users'));
+  const log = yield* Logger;
+
+  const data = yield* database.query('SELECT * FROM users');
+  yield* log(data.result);
 });
 
 const ConfigLive = Layer.succeed(
   Config,
-  Effect.succeed({
+  {
     logLevel: 'INFO',
     connection: 'mysql://username:password@hostname:port/database_name',
-  }),
+  },
 );
 
 const LoggerLive = Layer.effect(
@@ -38,8 +41,7 @@ const LoggerLive = Layer.effect(
 
     return (message) =>
       Effect.gen(function* () {
-        const { logLevel } = yield* config;
-        console.log(`[${logLevel}] ${message}`);
+        console.log(`[${config.logLevel}] ${message}`);
       });
   }),
 );
@@ -53,17 +55,17 @@ const DatabaseLive = Layer.effect(
     return {
       query: (sql: string) =>
         Effect.gen(function* () {
-          const { connection } = yield* config;
           yield* log('Executing query: ' + sql);
-          return { result: 'Results from ' + connection };
+          return { result: 'Results from ' + config.connection };
         }),
     };
   }),
 );
 
-const MainLive = DatabaseLive.pipe(
-  Layer.provide(LoggerLive),
-  Layer.provide(ConfigLive),
+Effect.runSync(
+  program.pipe(
+    Effect.provide(DatabaseLive),
+    Effect.provide(LoggerLive),
+    Effect.provide(ConfigLive)
+  )
 );
-
-Effect.runSync(Effect.provide(program, MainLive));
