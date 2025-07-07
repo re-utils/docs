@@ -37,7 +37,7 @@ const LoggerLive = Layer.effect(
     const config = yield* Config;
 
     return (message) =>
-      Effect.gen(function* () {
+      Effect.sync(() => {
         console.log(`[${config.logLevel}] ${message}`);
       });
   }),
