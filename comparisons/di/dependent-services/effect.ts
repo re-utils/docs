@@ -1,4 +1,4 @@
-import { Effect, Context, Layer, pipe } from 'effect';
+import { Effect, Context, Layer } from 'effect';
 
 class Config extends Context.Tag('Config')<
   Config,

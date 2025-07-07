@@ -104,7 +104,7 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
     - Minified size: **210.77KB**
     - Gzipped size: **67.78KB**
     ```ts
-    import { Effect, Context, Layer, pipe } from 'effect';
+    import { Effect, Context, Layer } from 'effect';
     
     class Config extends Context.Tag('Config')<
       Config,
