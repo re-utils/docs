@@ -25,7 +25,7 @@ const run = (
 
 // Generate a random number and log the
 // value using the provided logger
-const computeNumber = di.derive(
+const computeNumber = di.use(
   [randNumber, logNumber],
   (randNumber, logNumber) => {
     const result = randNumber();
@@ -63,14 +63,14 @@ Compute results are cached within the same dependencies map.
 
 In this example, `generateNumber` computed result get cached:
 ```ts
-import { derive } from 'udic';
+import * as di from 'udic';
 
-const generateNumber = derive([], () => Math.random());
+const generateNumber = di.use([], () => Math.random());
 
-const processNumber1 = derive([generateNumber], (number) => number * 2);
-const processNumber2 = derive([generateNumber], (number) => number * 2);
+const processNumber1 = di.use([generateNumber], (number) => number * 2);
+const processNumber2 = di.use([generateNumber], (number) => number * 2);
 
-const validateGeneratedNumber = derive(
+const validateGeneratedNumber = di.use(
   [processNumber1, processNumber2],
   (number1, number2) => number1 === number2
 );
@@ -85,16 +85,16 @@ import * as di from 'udic';
 const id = di.service('id')<string>();
 const label = di.service('label')<string>();
 
-const generatedString = di.derive(
+const generatedString = di.use(
   [id],
   (id) => id + ' - ' + Math.random()
 );
-const result = di.derive(
+const result = di.use(
   [label, generatedString],
   (label, generatedString) => label + ': ' + generatedString
 );
 
-const printString = di.derive(
+const printString = di.use(
   [
     // Will generate different numbers
     di.inject(result, { id: 'a' }),

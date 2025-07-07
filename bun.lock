@@ -19,7 +19,7 @@
         "oxc-minify": "^0.75.1",
         "p-limit": "^6.2.0",
         "rolldown": "^1.0.0-beta.24",
-        "udic": "0.4.0",
+        "udic": "1.0.0",
       },
     },
   },
@@ -930,7 +930,7 @@
 
     "typescript": ["typescript@5.8.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ=="],
 
-    "udic": ["udic@0.4.0", "", {}, "sha512-SVFk53yYMc7J/N8HJynI4ikJHtWO32AGQtjO8qWtZ/tInI10UMfYvkn33TkBrAPaz7lyUjOfRNJpJxJfXwQSbQ=="],
+    "udic": ["udic@1.0.0", "", {}, "sha512-dVloqgMcI3bsGEjRlVZe/ZrwMoVZIGgZGc/OZ3NyVCrWSI/YXxY7jyHRfqxhnWNWuUO55rBCC7H/sOU3+N7Tsg=="],
 
     "ufo": ["ufo@1.6.1", "", {}, "sha512-9a4/uxlTWJ4+a5i0ooc1rU7C7YOw3wT+UGqdeNNHWnOF9qcMBgLRS+4IYUqbczewFx4mLEig6gawh7X6mFlEkA=="],
 

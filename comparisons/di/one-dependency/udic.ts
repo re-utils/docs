@@ -1,8 +1,8 @@
-import { service, derive } from 'udic';
+import * as di from 'udic';
 
-const random = service('random')<() => number>();
+const random = di.service('random')<() => number>();
 
-const main = derive([random], (random) => {
+const main = di.use([random], (random) => {
   console.log('Random number:', random());
 });
 

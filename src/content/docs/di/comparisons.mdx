@@ -11,15 +11,15 @@ Compare **udic** with other DI libraries.
 Use and inject one dependency.
 <Tabs>
   <TabItem label='udic'>
-    - Bundle size: **479B**
+    - Bundle size: **473B**
     - Minified size: **215B**
     - Gzipped size: **177B**
     ```ts
-    import { service, derive } from 'udic';
+    import * as di from 'udic';
     
-    const random = service('random')<() => number>();
+    const random = di.service('random')<() => number>();
     
-    const main = derive([random], (random) => {
+    const main = di.use([random], (random) => {
       console.log('Random number:', random());
     });
     
@@ -51,12 +51,12 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
 <Tabs>
   <TabItem label='udic'>
     - Bundle size: **1.14KB**
-    - Minified size: **609B**
-    - Gzipped size: **417B**
+    - Minified size: **599B**
+    - Gzipped size: **410B**
     ```ts
     import * as di from 'udic';
     
-    // Services
+    // Declarations
     const config = di.service('config')<{
       logLevel: string;
       connection: string;
@@ -66,37 +66,37 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
       query: (sql: string) => { result: string };
     }>();
     
-    const main = di.derive([db], (db) => {
+    const main = di.use([db], (db) => {
       console.log(db.query('SELECT * FROM users'));
     });
     
-    // Implement service that depends on other services
-    const logImpl = di.impl(
-      log,
-      di.derive([config], ({ logLevel }) => (msg) => {
-        console.log(`[${logLevel}] ${msg}`);
-      }),
+    // Implementations
+    const logImpl = di.impl(log, di.use(
+      [config],
+      (config) => (msg) => {
+        console.log(`[${config.logLevel}] ${msg}`);
+      })
     );
-    const dbImpl = di.impl(
-      db,
-      di.derive([config, log], ({ connection }, log) => ({
-        query(sql) {
+    const dbImpl = di.impl(db, di.use(
+      [config, log],
+      ({ connection }, log) => ({
+        query: (sql: string) => {
           log('Executing query: ' + sql);
           return { result: 'Results from ' + connection };
         },
-      })),
-    );
+      })
+    ));
     
-    // Provide dependencies for the impl
-    const logDeps = di.merge([logImpl], {
+    // Link dependencies
+    const logDeps = di.link([logImpl], {
       config: {
         logLevel: 'INFO',
         connection: 'mysql://username:password@hostname:port/database_name',
       },
     });
-    const dbDeps = di.merge([dbImpl], logDeps);
+    const dbDeps = di.link([dbImpl], logDeps);
     
-    // Run main
+    // Run with linked dependencies
     main(dbDeps);
     ```
   </TabItem>

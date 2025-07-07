@@ -34,7 +34,7 @@ const createUUID = di.service('createUUID')<
   () => string
 >();
 
-const printUUID = di.derive(
+const printUUID = di.use(
   [createUUID],
   (createUUID) => {
     // Log the generated UUID
@@ -61,14 +61,14 @@ import * as di from 'udic';
 const number = di.service('number')<number>();
 
 // Calculate a number based on randNumber
-const computedNumber = di.derive(
+const computedNumber = di.use(
   [number],
   (number) => number + 1
 );
 
 const string = di.service('string')<number>();
 
-const computedValue = di.derive(
+const computedValue = di.use(
   // Capture the compute value
   [computedNumber, string],
   (computedNumber, string) => string + (computedNumber * 2)
