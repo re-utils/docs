@@ -1,9 +1,9 @@
 ---
 title: Semaphore
-description: A primitive used to control access to a common resource by multiple task.
+description: A primitive used to control access to a common resource by multiple tasks.
 ---
 
-A primitive used to control access to a common resource by multiple task.
+A primitive used to control access to a common resource by multiple tasks.
 
 In this example, 5 tasks are spawned but only 2 can run concurrently.
 ```ts {9, 14, 21}

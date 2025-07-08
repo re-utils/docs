@@ -63,3 +63,42 @@ Sleep for `ms` milliseconds.
 - `ms: number` - Sleep duration in milliseconds.
 
 Sleep for `ms` milliseconds. This blocks the event loop.
+
+### `nextTick`
+Continue the async task on next microtick. Await this value is equivalent to await a resolved `Promise`.
+
+### `semaphore`
+A primitive used to control access to a common resource by multiple tasks.
+
+#### `semaphore.init()`
+- `n: number` - Number of permits.
+- Returns `semaphore.Semaphore`
+
+Create a semaphore with `n` permits.
+
+#### `semaphore.acquire()`
+- `sem: semaphore.Semaphore` - A semaphore to acquire a permit.
+- Returns `Promise<void> | void`
+
+Acquire a permit from `sem` or wait until a permit is available.
+
+#### `semaphore.release()`
+- `sem: semaphore.Semaphore` - A semaphore to release a permit.
+
+Release a permit to `sem`.
+
+### `latch`
+A primitive that allows one task to wait until another task completes an operation before continuing execution.
+
+#### `latch.init()`
+Create a latch.
+
+#### `latch.open()`
+- `c: latch.Latch` - The latch to open.
+
+Unblock tasks that are waiting for `c` to open.
+
+#### `latch.close()`
+- `c: latch.Latch` - The latch to close.
+
+Reclose a latch. If the latch was not opened, tasks that are waiting for it blocks forever.
