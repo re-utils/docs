@@ -43,3 +43,23 @@ Requires TypeScript 5.4 or newer.
 ## Links
 - **Github**: https://github.com/re-utils/ciorent
 - **npm**: https://npmjs.com/package/ciorent
+
+## API
+Import:
+```ts
+import {
+  sleep, sleepSync, nextTick,
+  semaphore, latch
+} from 'ciorent';
+```
+
+### `sleep()`
+- `ms: number` - Sleep duration in milliseconds.
+- Returns `Promise<void>` - A `Promise` that resolves in `ms` milliseconds.
+
+Sleep for `ms` milliseconds.
+
+### `sleepSync()`
+- `ms: number` - Sleep duration in milliseconds.
+
+Sleep for `ms` milliseconds. This blocks the event loop.
