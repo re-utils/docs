@@ -175,3 +175,135 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
     ```
   </TabItem>
 </Tabs>
+
+
+## Multiple dependencies
+Use and inject dependencies in different function layers.
+<Tabs>
+  <TabItem label='udic'>
+    - Bundle size: **1.1KB**
+    - Minified size: **534B**
+    - Gzipped size: **351B**
+    ```ts
+    import * as di from 'udic';
+    
+    const logger = di.service('logger')<{
+      info: (msg: string) => void;
+    }>();
+    const createId = di.service('createId')<() => string>();
+    
+    interface User {
+      readonly name: string;
+      readonly id: string;
+      readonly credits: number;
+    }
+    
+    // Functions that requires dependencies to run
+    const createUser = di.use(
+      [createId, logger],
+      (createId, logger) =>
+        (name: string): User => {
+          const id = createId();
+          logger.info(`User created: id="${id}", name="${name}"`);
+          return { name, id, credits: 0 };
+        },
+    );
+    
+    const giveUserCredits = di.use(
+      [logger],
+      (logger) => (user: User, credits: number) => {
+        // @ts-ignore
+        user.credits += credits;
+        logger.info(
+          `User credits: id="${user.id}", increased-credits=${credits}, current-credits=${user.credits}`,
+        );
+      },
+    );
+    
+    // Main program
+    const main = di.use(
+      [createUser, giveUserCredits],
+      (createUser, giveUserCredits) => {
+        const user = createUser('reve');
+        giveUserCredits(user, 10);
+      },
+    );
+    
+    main({
+      logger: {
+        info: (msg) => console.info('[INFO]', msg),
+      },
+      createId: () => '' + Math.round(Math.random() * 1e6),
+    });
+    ```
+  </TabItem>
+  <TabItem label='effect'>
+    - Bundle size: **79.32KB**
+    - Minified size: **21.89KB**
+    - Gzipped size: **7.58KB**
+    ```ts
+    import { Micro, Context } from 'effect';
+    
+    class Logger extends Context.Tag('Logger')<
+      Logger,
+      {
+        info: (msg: string) => Micro.Micro<void>;
+      }
+    >() {}
+    class CreateID extends Context.Tag('CreateID')<
+      CreateID,
+      Micro.Micro<string>
+    >() {}
+    
+    interface User {
+      readonly name: string;
+      readonly id: string;
+      readonly credits: number;
+    }
+    
+    // Functions that requires dependencies to run
+    const createUser = (name: string) =>
+      Micro.gen(function* () {
+        const logger = yield* Micro.service(Logger);
+        const createId = yield* Micro.service(CreateID);
+    
+        const id = yield* createId;
+        yield* logger.info(`User created: id="${id}", name="${name}"`);
+    
+        return { name, id, credits: 0 } as User;
+      });
+    
+    const giveUserCredits = (user: User, credits: number) =>
+      Micro.gen(function* () {
+        const logger = yield* Micro.service(Logger);
+    
+        // @ts-ignore
+        user.credits += credits;
+        yield* logger.info(
+          `User credits: id="${user.id}", increased-credits=${credits}, current-credits=${user.credits}`,
+        );
+      });
+    
+    // Main program
+    const main = Micro.gen(function* () {
+      const user = yield* createUser('reve');
+      yield* giveUserCredits(user, 10);
+    });
+    
+    Micro.runSync(
+      main.pipe(
+        Micro.provideService(Logger, {
+          info: (msg) =>
+            Micro.sync(() => {
+              console.info('[INFO]', msg);
+            }),
+        }),
+        Micro.provideService(
+          CreateID,
+          Micro.sync(() => '' + Math.round(Math.random() * 1e6)),
+        ),
+      ),
+    );
+    ```
+  </TabItem>
+</Tabs>
