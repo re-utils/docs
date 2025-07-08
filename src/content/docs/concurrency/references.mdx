@@ -103,3 +103,9 @@ Unblock tasks that are waiting for `c` to open.
 - `c: latch.Latch` - The latch to close.
 
 Reclose a latch. If the latch was not opened, tasks that are waiting for it blocks forever.
+
+#### `latch.wait()`
+- `c: latch.Latch` - The latch to wait for.
+- Returns `Promise<void>`
+
+Wait for `c` to open.
