@@ -93,7 +93,7 @@ A primitive that allows one task to wait until another task completes an operati
 #### `latch.init()`
 - Returns `latch.Latch`
 
-Create a latch.
+Create a closed latch.
 
 #### `latch.open()`
 - `c: latch.Latch` - The latch to open.
@@ -103,10 +103,10 @@ Unblock tasks that are waiting for `c` to open.
 #### `latch.close()`
 - `c: latch.Latch` - The latch to close.
 
-Reclose a latch. If the latch was not opened, tasks that are waiting for it blocks forever.
+Reclose a latch if it was opened.
 
 #### `latch.wait()`
 - `c: latch.Latch` - The latch to wait for.
-- Returns `Promise<void>`
+- Returns `Promise<void> | void`
 
 Wait for `c` to open.
