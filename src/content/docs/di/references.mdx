@@ -83,11 +83,11 @@ Create a service.
 Create a compute that requires the specified dependencies to run.
 
 ### `inject()`
-- `<T>` - Dependency type of input compute.
-- `<R>` - Result type of input compute.
-- `<D extends Partial<T>>` - Provided dependency type.
+- `<T>` - Input compute dependencies type.
+- `<R>` - Input compute result type.
+- `<D extends Partial<T>>` - Provided dependencies type.
 - `compute: di.Compute<T, R>` - Target compute to inject dependencies.
 - `deps: D` - Dependencies to inject to the compute.
 - Returns `di.Compute<di.Prettify<Omit<T, keyof D>>, R>`
 
-Create a new compute with the provided services.
+Create a new compute with provided dependencies.
