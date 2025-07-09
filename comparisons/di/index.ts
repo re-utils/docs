@@ -7,5 +7,5 @@ import { category } from '../utils.js';
 export default category({
   output: 'di/comparisons',
   description: 'Compare **udic** with other DI libraries.',
-  list: [oneDep, chainedDeps, multiDep],
+  list: [oneDep, multiDep, chainedDeps],
 });
