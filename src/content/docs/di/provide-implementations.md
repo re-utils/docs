@@ -8,8 +8,8 @@ In this example, we can choose to log the number to the console or file.
 import { appendFileSync } from 'node:fs';
 import * as di from 'udic';
 
-const randNumber = di.service('randNumber')<() => number>();
-const logNumber = di.service('logNumber')<(n: number) => void>();
+const randNumber = di.service('randNumber')<() => number>;
+const logNumber = di.service('logNumber')<(n: number) => void>;
 
 // Run the compute by providing a
 // random number generator implementation

@@ -11,13 +11,13 @@ Compare **udic** with other DI libraries.
 Use and inject one dependency.
 <Tabs>
   <TabItem label='udic'>
-    - Bundle size: **473B**
-    - Minified size: **215B**
-    - Gzipped size: **177B**
+    - Bundle size: **461B**
+    - Minified size: **209B**
+    - Gzipped size: **174B**
     ```ts
     import * as di from 'udic';
     
-    const random = di.service('random')<() => number>();
+    const random = di.service('random')<() => number>;
     const main = di.use([random], (random) => {
       console.log('Random number:', random());
     });
@@ -49,16 +49,16 @@ Use and inject one dependency.
 Use and inject dependencies in different function layers.
 <Tabs>
   <TabItem label='udic'>
-    - Bundle size: **1.1KB**
-    - Minified size: **534B**
-    - Gzipped size: **351B**
+    - Bundle size: **1.09KB**
+    - Minified size: **526B**
+    - Gzipped size: **347B**
     ```ts
     import * as di from 'udic';
     
     const logger = di.service('logger')<{
       info: (msg: string) => void;
-    }>();
-    const createId = di.service('createId')<() => string>();
+    }>;
+    const createId = di.service('createId')<() => string>;
     
     interface User {
       readonly name: string;
@@ -181,9 +181,9 @@ Use and inject dependencies in different function layers.
 Use and inject 3 dependencies, with `log` depends on `config` and `db` depends on both `log` and `config`.
 <Tabs>
   <TabItem label='udic'>
-    - Bundle size: **1.15KB**
-    - Minified size: **606B**
-    - Gzipped size: **414B**
+    - Bundle size: **1.13KB**
+    - Minified size: **596B**
+    - Gzipped size: **411B**
     ```ts
     import * as di from 'udic';
     
@@ -191,11 +191,11 @@ Use and inject 3 dependencies, with `log` depends on `config` and `db` depends o
     const config = di.service('config')<{
       logLevel: string;
       connection: string;
-    }>();
-    const log = di.service('log')<(msg: string) => void>();
+    }>;
+    const log = di.service('log')<(msg: string) => void>;
     const db = di.service('db')<{
       query: (sql: string) => { result: string };
-    }>();
+    }>;
     
     const main = di.use([db, log], (db, log) => {
       log(db.query('SELECT * FROM users').result);

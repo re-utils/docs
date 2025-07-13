@@ -62,32 +62,32 @@ import {
 // Type imports
 import type {
   Service, Compute, Impl
-  InferResult, InferDependency
+  TResult, TDependency
 } from 'udic';
 ```
 
 ### `service()`
 - `<T>` - Service identifier type.
 - `name: T` - Service identifier.
-- Returns `<K>() => di.Service<T, K> & K`
+- Returns `<K>() => di.Service<T, K>`
 
 Create a service.
 
 ### `use()`
-- `<const T extends di.Dependency[]>` - Compute dependency list type.
+- `<const T>` - Compute dependency list type.
 - `<const R>` - Compute result type.
 - `deps: T` - Compute dependency list.
-- `f: (...args: { [K in keyof T] : di.InferResult<T[K]> }) => R` - The function to compute the result from provided dependencies.
-- Returns `di.Compute<di.InferDependency<T[number]>, R>` - A function that requires the implementations of the provided dependencies to execute.
+- `f: (...args: ...) => R` - The function to compute the result from provided dependencies.
+- Returns `di.Compute<...>` - A function that requires the implementations of the provided dependencies to execute.
 
 Create a compute that requires the specified dependencies to run.
 
 ### `inject()`
 - `<T>` - Input compute dependencies type.
 - `<R>` - Input compute result type.
-- `<D extends Partial<T>>` - Provided dependencies type.
+- `<D>` - Provided dependencies type.
 - `compute: di.Compute<T, R>` - Target compute to inject dependencies.
 - `deps: D` - Dependencies to inject to the compute.
-- Returns `di.Compute<di.Prettify<Omit<T, keyof D>>, R>`
+- Returns `di.Compute<...>`
 
 Create a new compute with provided dependencies.

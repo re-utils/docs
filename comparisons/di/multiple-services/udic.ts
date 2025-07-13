@@ -2,8 +2,8 @@ import * as di from 'udic';
 
 const logger = di.service('logger')<{
   info: (msg: string) => void;
-}>();
-const createId = di.service('createId')<() => string>();
+}>;
+const createId = di.service('createId')<() => string>;
 
 interface User {
   readonly name: string;

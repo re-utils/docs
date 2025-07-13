@@ -4,11 +4,11 @@ import * as di from 'udic';
 const config = di.service('config')<{
   logLevel: string;
   connection: string;
-}>();
-const log = di.service('log')<(msg: string) => void>();
+}>;
+const log = di.service('log')<(msg: string) => void>;
 const db = di.service('db')<{
   query: (sql: string) => { result: string };
-}>();
+}>;
 
 const main = di.use([db, log], (db, log) => {
   log(db.query('SELECT * FROM users').result);
