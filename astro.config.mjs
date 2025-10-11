@@ -14,10 +14,33 @@ const createItem = (prefix, items, label = prefix) => ({
   })),
 });
 
+const PAGES = [
+  {
+    name: "guides",
+    label: "Guides",
+    items: ["Intro", "Libraries"],
+  },
+  {
+    name: "concurrency",
+    label: "Concurrency",
+    items: ["References", "Sleep", "Yield", "Semaphore", "Latch"],
+  },
+  {
+    name: "di",
+    label: "Dependency Injection",
+    items: ["References", "Using services", "Provide implementations"],
+  },
+  {
+    name: "backend",
+    label: "Backend",
+    items: ["References", "Routing"],
+  },
+];
+
 // https://astro.build/config
 export default defineConfig({
   redirects: Object.fromEntries(
-    ["/concurrency", "/di"].map((link) => [link, link + "/references"]),
+    PAGES.map((page) => ["/" + page.name, "/" + page.name + "/references"]),
   ),
   prefetch: {
     prefetchAll: true,
@@ -42,27 +65,9 @@ export default defineConfig({
           href: "//discord.gg/za6S2GbK24",
         },
       ],
-      sidebar: [
-        createItem("Guides", ["Intro", "Libraries"]),
-        createItem("Concurrency", [
-          "References",
-          "Sleep",
-          "Yield",
-          "Semaphore",
-          "Latch",
-          "Comparisons",
-        ]),
-        createItem(
-          "di",
-          [
-            "References",
-            "Using services",
-            "Provide implementations",
-            "Comparisons",
-          ],
-          "Dependency Injection",
-        ),
-      ],
+      sidebar: PAGES.map((page) =>
+        createItem(page.name, page.items, page.label),
+      ),
       expressiveCode: {
         themes: ["catppuccin-mocha"],
       },

@@ -3,7 +3,6 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "build:compare": "bun comparisons/index.ts",
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
@@ -12,10 +11,10 @@
     "biome": "biome"
   },
   "dependencies": {
-    "@astrojs/starlight": "^0.34.4",
+    "@astrojs/starlight": "0.36.0",
     "@expressive-code/plugin-line-numbers": "^0.41.3",
     "@fontsource-variable/roboto-mono": "^5.2.6",
-    "astro": "^5.6.1",
+    "astro": "5.14.4",
     "sharp": "^0.34.2"
   },
   "devDependencies": {
