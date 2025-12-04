@@ -13,8 +13,8 @@ const logTime = (...args: any[]) => {
   console.log('[' + performance.now().toFixed(1) + 'ms]', ...args);
 };
 
-// Creates a semaphore with 2 permits and internal queue size of 200
-// Each permit allows a task to access resource or to perform an operation concurrently
+// Creates a semaphore with 2 permits and internal queue size of 100, which
+// allows 2 tasks to run concurrently and 100 others to wait.
 const sem = semaphore.init(2, 100);
 
 // Example task
