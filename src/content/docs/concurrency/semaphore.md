@@ -6,7 +6,7 @@ description: A primitive used to control access to a common resource by multiple
 A primitive used to control access to a common resource by multiple tasks.
 
 In this example, 5 tasks are spawned but only 2 can run concurrently.
-```ts {9, 13-16, 19, 21}
+```ts {9, 13-16, 19, 26}
 import { semaphore, sleep } from 'ciorent';
 
 const logTime = (...args: any[]) => {
