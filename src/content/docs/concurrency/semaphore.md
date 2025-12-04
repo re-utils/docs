@@ -13,12 +13,17 @@ const logTime = (...args: any[]) => {
   console.log('[' + performance.now().toFixed(1) + 'ms]', ...args);
 };
 
-// Creates a semaphore with 2 permits
+// Creates a semaphore with 2 permits and internal queue size of 200
 // Each permit allows a task to access resource or to perform an operation concurrently
-const sem = semaphore.init(2);
+const sem = semaphore.init(2, 100);
 
 // Example task
 const runTask = async (id: number) => {
+  if (semaphore.full(sem)) {
+    // Internal queue is full
+    // Handle error somehow
+  }
+
   // Acquire a permit or wait until a permit is available
   await semaphore.acquire(sem);
 
@@ -66,8 +71,12 @@ Without semaphore, all 5 tasks will start without waiting:
 It is recommended to wrap `semaphore.release` in a `finally` block to release the permit when an error is thrown.
 ```ts
 const runTask = async (...) => {
-  await semaphore.acquire(sem);
+  if (semaphore.full(sem)) {
+    // Internal queue is full
+    // Handle error somehow
+  }
 
+  await semaphore.acquire(sem);
   try {
     // Code that can throw errors...
   } finally {

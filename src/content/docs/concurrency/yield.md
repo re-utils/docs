@@ -1,9 +1,9 @@
 ---
 title: Yield
-description: Yield back to main thread, allowing other asynchronous tasks to run.
+description: Yield control in an expensive operation, allowing other tasks to run.
 ---
 
-A primitive to yield back to main thread in an expensive sync operation, allowing other tasks to run.
+A primitive to yield control in an expensive operation, allowing other tasks to run.
 ```ts {15}
 import { nextTick, sleep } from 'ciorent';
 
@@ -18,7 +18,7 @@ const expensiveTask = async () => {
 
   // Simulate expensive operation
   for (let i = 0, l = (Math.random() + 15) * 1e6; i < l; i++) {
-    // Yield occasionally for the runtime to run other tasks
+    // Yield occasionally for the main thread to run other tasks
     if (i % 1e5 === 0) await nextTick;
     x += Math.random() * 32 + i * Math.round(Math.random() * 16);
   }
