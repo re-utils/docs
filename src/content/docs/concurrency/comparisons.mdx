@@ -1,0 +1,36 @@
+---
+title: Comparisons
+description: Compare ciorent with other concurrency libraries.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Code } from '@astrojs/starlight/components';
+
+Compare `ciorent` usage with other concurrency libraries.
+
+### Appending streams to a file
+Stream files sequentially to output.
+
+import ciorentCode1 from '../../../../snippets/concurrency/1/ciorent.ts?raw';
+import pMutexCode1 from '../../../../snippets/concurrency/1/p-mutex.ts?raw';
+import asyncMutexCode1 from '../../../../snippets/concurrency/1/async-mutex.ts?raw';
+import pLimitCode1 from '../../../../snippets/concurrency/1/p-limit.ts?raw';
+import noLibCode1 from '../../../../snippets/concurrency/1/no-lib.ts?raw';
+
+<Tabs syncKey='concurrencyLib'>
+  <TabItem label='ciorent'>
+    <Code code={ciorentCode1} lang='ts' />
+  </TabItem>
+  <TabItem label='p-mutex'>
+    <Code code={pMutexCode1} lang='ts' />
+  </TabItem>
+  <TabItem label='async-mutex'>
+    <Code code={asyncMutexCode1} lang='ts' />
+  </TabItem>
+  <TabItem label='p-limit'>
+    <Code code={pLimitCode1} lang='ts' />
+  </TabItem>
+  <TabItem label='no library'>
+    <Code code={noLibCode1} lang='ts' />
+  </TabItem>
+</Tabs>

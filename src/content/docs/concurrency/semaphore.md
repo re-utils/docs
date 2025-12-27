@@ -19,13 +19,12 @@ const sem = semaphore.init(2, 100);
 
 // Example task
 const runTask = async (id: number) => {
-  if (semaphore.full(sem)) {
+  // Acquire a permit or wait until a permit is available
+  if (!await semaphore.acquire(sem)) {
     // Internal queue is full
     // Handle error somehow
+    return;
   }
-
-  // Acquire a permit or wait until a permit is available
-  await semaphore.acquire(sem);
 
   logTime(id, 'started');
   await sleep(1000);
@@ -70,17 +69,48 @@ Without semaphore, all 5 tasks will start without waiting:
 
 It is recommended to wrap `semaphore.release` in a `finally` block to release the permit when an error is thrown.
 ```ts
-const runTask = async (...) => {
-  if (semaphore.full(sem)) {
+const runTask = async (...args) => {
+  if (!await semaphore.acquire(sem)) {
     // Internal queue is full
     // Handle error somehow
+    return;
   }
 
-  await semaphore.acquire(sem);
   try {
-    // Code that can throw errors...
+    return await task(...args);
   } finally {
     semaphore.release(sem);
   }
 }
+
+const result = await runTask(...args);
+
+// Or use semaphore.run
+// This throws if the semaphore internal queue is full
+const result = await semaphore.run(sem, task, ...args);
+```
+
+## Mutex
+`ciorent` also includes a `mutex` API, which is relatively similar to using `semaphore` with concurrency 1 but with a few differences:
+- `mutex` is faster as it doesn't use a ring buffer under the hood to manage waiting promises.
+- `mutex` doesn't limit how many waiting promises can be created.
+
+Example usage:
+```ts
+import { mutex } from 'ciorent';
+
+const mu = mutex.init();
+
+const runTask = async (...args) => {
+  const release = await mutex.acquire(mu);
+
+  try {
+    return await task(...args);
+  } finally {
+    release();
+  }
+}
+const result = await runTask(...args);
+// Or mutex.run
+const result = await mutex.run(mu, task, ...args);
 ```

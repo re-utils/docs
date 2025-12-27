@@ -8,11 +8,11 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 Here's a `@mapl/web` API with a route that simply return `Hi`.
 ```ts
 // server.js
-import { router, route, send } from '@mapl/web';
+import { router, send } from '@mapl/web';
 import { compiler } from '@mapl/web/generic';
 
-const app = router([], [
-  route.get('/', send.raw(() => 'Hi'))
+const app = router.init([], [
+  router.get('/', send.raw(() => 'Hi'))
 ]);
 
 export default {
@@ -57,18 +57,18 @@ Navigate to http://localhost:8080, you should see `Hi` as the result.
 
 Example usage:
 ```ts
-const app = router([], [
-  route.get(
+const app = router.init([], [
+  router.get(
     '/',
     send.raw(() => 'Hi')
   ), // '/' => 'Hi'
 
-  handle.get(
+  router.get(
     '/user/*',
     send.raw((id) => 'User: ' + id)
   ), // '/user/reve' => 'User: reve'
 
-  handle.get(
+  router.get(
     '/search/**',
     send.raw((rest) => 'Search results for: ' + rest)
   ) // '/search/a/b' => 'Search results for: a/b'
@@ -78,13 +78,13 @@ const app = router([], [
 ## Subroutes
 Subroutes can be used to declare multiple routes with the same prefix.
 ```ts
-const user = router([], [
-  handle.get('/profile', () => ...),
-  route.get('/login', () => ...)
+const user = router.init([], [
+  router.get('/profile', () => ...),
+  router.get('/login', () => ...)
 ]);
 
-const app = router([], [
-  route.get('/', () => ...)
+const app = router.init([], [
+  router.get('/', () => ...)
 ], {
   // register as /user/profile and /user/login
   '/user': user,
