@@ -1,0 +1,26 @@
+---
+title: Signals
+description: Lightweight polling abort signals.
+---
+
+A more lightweight form of abort signal.
+```ts
+import { signal } from 'ciorent';
+
+const writeToFile = async (sig: signal.Signal, content: string): number => {
+  await writeToFile1(content);
+  if (signal.aborted(sig)) return 1;
+
+  await writeToFile2(content);
+  if (signal.aborted(sig)) return 2;
+
+  await writeToFile3(content);
+  return 3;
+}
+
+console.log(
+  // Stopped after 26ms and the current file operation is finished
+  await writeToFile(signal.timeout(26), 'HPNY :)'),
+  'files written to'
+);
+```
