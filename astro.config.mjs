@@ -23,7 +23,7 @@ const PAGES = [
   {
     name: "concurrency",
     label: "Concurrency",
-    items: ["References", "Sleep", "Yield", "Semaphore", 'Signal', 'Comparisons'],
+    items: ["References", "Yield", "Semaphore", 'Signal', 'Comparisons'],
   },
   {
     name: "di",

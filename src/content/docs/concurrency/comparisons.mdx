@@ -11,11 +11,11 @@ Compare `ciorent` usage with other concurrency libraries.
 ### Appending streams to a file
 Stream files sequentially to output.
 
-import ciorentCode1 from '../../../../snippets/concurrency/1/ciorent.ts?raw';
-import pMutexCode1 from '../../../../snippets/concurrency/1/p-mutex.ts?raw';
-import asyncMutexCode1 from '../../../../snippets/concurrency/1/async-mutex.ts?raw';
-import pLimitCode1 from '../../../../snippets/concurrency/1/p-limit.ts?raw';
-import noLibCode1 from '../../../../snippets/concurrency/1/no-lib.ts?raw';
+import ciorentCode1 from '../../../../snippets/concurrency/mutex/ciorent.ts?raw';
+import pMutexCode1 from '../../../../snippets/concurrency/mutex/p-mutex.ts?raw';
+import asyncMutexCode1 from '../../../../snippets/concurrency/mutex/async-mutex.ts?raw';
+import pLimitCode1 from '../../../../snippets/concurrency/mutex/p-limit.ts?raw';
+import noLibCode1 from '../../../../snippets/concurrency/mutex/no-lib.ts?raw';
 
 <Tabs syncKey='concurrencyLib'>
   <TabItem label='ciorent'>
@@ -32,5 +32,21 @@ import noLibCode1 from '../../../../snippets/concurrency/1/no-lib.ts?raw';
   </TabItem>
   <TabItem label='no library'>
     <Code code={noLibCode1} lang='ts' />
+  </TabItem>
+</Tabs>
+
+### Get file hashes concurrently
+Read file content and return the hashes, need to limit concurrent
+file reads to avoid issues such as too many file handles.
+
+import ciorentCode2 from '../../../../snippets/concurrency/semaphore/ciorent.ts?raw';
+import pLimitCode2 from '../../../../snippets/concurrency/semaphore/p-limit.ts?raw';
+
+<Tabs syncKey='concurrencyLib'>
+  <TabItem label='ciorent'>
+    <Code code={ciorentCode2} lang='ts' />
+  </TabItem>
+  <TabItem label='p-limit'>
+    <Code code={pLimitCode2} lang='ts' />
   </TabItem>
 </Tabs>
